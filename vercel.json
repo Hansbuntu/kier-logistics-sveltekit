@@ -3,10 +3,5 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".svelte-kit/output/client",
   "installCommand": "npm install --legacy-peer-deps",
-  "framework": "sveltekit",
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs20"
-    }
-  }
+  "framework": "sveltekit"
 }
