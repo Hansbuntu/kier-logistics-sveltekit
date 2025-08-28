@@ -5,24 +5,61 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   body {
     @apply bg-gray-50 text-gray-900;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* iPhone Safari specific fixes */
+  input, textarea, select {
+    -webkit-appearance: none;
+    border-radius: 0;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Fix for iOS Safari button styling */
+  button {
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Mobile touch improvements */
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
 @layer components {
   .btn-primary {
     @apply bg-gradient-to-r from-gold-500 to-gold-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:from-gold-600 hover:to-gold-700 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2;
+    /* Mobile touch improvements */
+    min-height: 44px; /* iOS minimum touch target */
+    touch-action: manipulation;
   }
 
   .btn-secondary {
     @apply bg-white text-gray-700 font-semibold py-3 px-6 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 hover:border-gray-400 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    /* Mobile touch improvements */
+    min-height: 44px; /* iOS minimum touch target */
+    touch-action: manipulation;
   }
 
   .input-field {
     @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition-colors duration-200;
+    /* Mobile improvements */
+    min-height: 44px; /* iOS minimum touch target */
+    font-size: 16px; /* Prevents zoom */
   }
 
   .card {
@@ -62,4 +99,31 @@
 /* Loading animations */
 .loading-spinner {
   @apply animate-spin rounded-full h-8 w-8 border-b-2 border-gold-600;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  .btn-primary, .btn-secondary {
+    @apply py-4 px-6; /* Larger touch targets on mobile */
+    min-height: 48px;
+  }
+  
+  .input-field {
+    @apply py-4; /* Larger touch targets on mobile */
+    min-height: 48px;
+  }
+  
+  .card {
+    @apply p-4; /* Adjusted padding for mobile */
+  }
+}
+
+/* iPhone notch support */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
 } 
