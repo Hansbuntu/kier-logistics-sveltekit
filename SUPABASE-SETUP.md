@@ -11,7 +11,9 @@
 2. **Navigate to Settings → API**
 3. **Copy these values:**
    - **Project URL** (looks like: `https://abcdefghijklmnop.supabase.co`)
+   
    - **Anon/Public Key** (starts with `eyJ...`)
+   
 
 ## **⚙️ Step 2: Configure Environment Variables**
 
