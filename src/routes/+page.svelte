@@ -3,6 +3,34 @@
   import TrustIndicators from '$lib/components/TrustIndicators.svelte';
   import ServicesOverview from '$lib/components/ServicesOverview.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import { trackingStore } from '$lib/stores/trackingStore.js';
+  
+  let trackingData = null;
+  let loading = false;
+  let error = null;
+  let notification = null;
+
+  // Subscribe to tracking store
+  trackingStore.subscribe((data) => {
+    trackingData = data;
+    console.log('📊 Tracking data updated:', data);
+  });
+
+  async function handleTrackingSubmit(event) {
+    const trackingCode = event.detail;
+    console.log('🔍 Tracking submitted:', trackingCode);
+    
+    // The TrackingForm component now handles the API call
+    // We just need to handle the result display
+    if (trackingData) {
+      showNotification('Tracking information loaded successfully!', 'success');
+    }
+  }
+
+  function showNotification(message, type = 'info') {
+    notification = { message, type, timestamp: Date.now() };
+    setTimeout(() => notification = null, 5000);
+  }
 </script>
 
 <svelte:head>
@@ -27,7 +55,7 @@
       <div class="tracking-section">
         <h2 class="tracking-title">Track Your Precious Cargo</h2>
         <p class="tracking-subtitle">Enter your tracking code to monitor your shipment in real-time</p>
-        <TrackingForm />
+        <TrackingForm on:submit={handleTrackingSubmit} />
       </div>
     </div>
     
@@ -101,6 +129,13 @@
     </div>
   </div>
 </section>
+
+<!-- Notification Display -->
+{#if notification}
+  <div class="notification {notification.type}">
+    {notification.message}
+  </div>
+{/if}
 
 <Footer />
 
@@ -472,6 +507,52 @@
     .security-shield,
     .global-network {
       font-size: 3rem;
+    }
+  }
+  
+  /* Notification Styles */
+  .notification {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 1001;
+    animation: slideIn 0.3s ease;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .notification.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+  
+  .notification.error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  }
+  
+  .notification.info {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .notification {
+      right: 10px;
+      left: 10px;
+      max-width: none;
     }
   }
 </style> 

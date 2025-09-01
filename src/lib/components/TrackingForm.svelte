@@ -1,11 +1,13 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { trackingStore } from '$lib/stores/trackingStore.js';
   
   const dispatch = createEventDispatcher();
 
   let trackingCode = '';
   let isValid = false;
   let error = '';
+  let loading = false;
 
   // Enhanced validation for new format: XXX-XXXX-XXXX
   // Character set: [A-HJ-NP-Z0-9] (no ambiguous chars like 0/O)
@@ -35,13 +37,40 @@
     error = '';
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!isValid) {
       error = 'Please enter a valid tracking code in format: XXX-XXXX-XXXX';
       return;
     }
     
-    dispatch('submit', trackingCode);
+    loading = true;
+    error = '';
+    
+    try {
+      console.log('🔍 Fetching tracking data for:', trackingCode);
+      const response = await fetch(`/api/tracking/${trackingCode}`);
+      
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch tracking information');
+      }
+      
+      const data = await response.json();
+      console.log('✅ Tracking data received:', data);
+      
+      // Update the store
+      trackingStore.set(data);
+      
+      // Dispatch event for parent component
+      dispatch('submit', trackingCode);
+      
+    } catch (err) {
+      console.error('❌ Tracking error:', err);
+      error = err instanceof Error ? err.message : 'An unexpected error occurred';
+      trackingStore.set(null);
+    } finally {
+      loading = false;
+    }
   }
 
   function handleKeyPress(event) {
@@ -53,7 +82,7 @@
 
 <div class="card">
   <div class="text-center mb-6">
-    <div class="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
       <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
       </svg>
@@ -78,6 +107,7 @@
           class="input-field pr-12 {isValid ? 'border-green-500 focus:border-green-500 focus:ring-green-500' : ''}"
           maxlength="14"
           autocomplete="off"
+          style="color: #1f2937; background-color: white;"
         />
         {#if isValid}
           <div class="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -97,15 +127,94 @@
 
     <button
       type="submit"
-      disabled={!isValid}
-      class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+      disabled={!isValid || loading}
+      class="btn-primary w-full {loading ? 'opacity-75 cursor-not-allowed' : ''}"
     >
-      <span class="flex items-center justify-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      {#if loading}
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
+        Loading...
+      {:else}
         Track Shipment
-      </span>
+      {/if}
     </button>
   </form>
-</div> 
+</div>
+
+<style>
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(30, 58, 138, 0.1);
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: white;
+    color: #1f2937;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .input-field::placeholder {
+    color: #9ca3af;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #1e3a8a;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+    min-height: 48px;
+  }
+  
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  }
+  
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  /* Mobile improvements */
+  @media (max-width: 768px) {
+    .card {
+      padding: 1.5rem;
+    }
+    
+    .input-field {
+      font-size: 16px; /* Prevents zoom on iOS */
+      min-height: 48px;
+    }
+    
+    .btn-primary {
+      min-height: 48px;
+      padding: 1rem 1.5rem;
+    }
+  }
+</style> 

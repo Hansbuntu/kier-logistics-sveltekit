@@ -1,15 +1,39 @@
 import { writable } from 'svelte/store';
 
-export const trackingStore = writable(null);
+// Define types for better type safety
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+interface CustodyEntry {
+  location: Location;
+  guardianName: string;
+  timestamp: string;
+}
+
+interface DeliveryInfo {
+  nextLocation?: Location;
+}
+
+interface TrackingData {
+  trackingCode: string;
+  currentLocation: Location;
+  custodyChain: CustodyEntry[];
+  delivery: DeliveryInfo;
+  product?: any;
+}
+
+export const trackingStore = writable<TrackingData | null>(null);
 
 export const mapStore = writable({
-  center: [0, 0],
+  center: [0, 0] as [number, number],
   zoom: 10,
-  markers: []
+  markers: [] as any[]
 });
 
 // Utility functions
-export function updateTrackingData(data) {
+export function updateTrackingData(data: TrackingData) {
   trackingStore.set(data);
   
   // Update map center to current location
