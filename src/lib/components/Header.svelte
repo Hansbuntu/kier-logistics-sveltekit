@@ -36,7 +36,7 @@
     <nav class="nav-desktop">
       <a href="/" class="nav-link">Home</a>
       <a href="/services" class="nav-link">Services</a>
-      <a href="/" class="nav-link">Track Shipment</a>
+      <a href="/track" class="nav-link">Track Shipment</a>
       <a href="/contact" class="nav-link">Contact</a>
     </nav>
     
@@ -46,9 +46,9 @@
         <span class="phone-icon">📞</span>
         <a href="tel:+1234567890" class="phone-link">+1 (234) 567-890</a>
       </div>
-      <button class="cta-button">
+      <a href="/contact" class="cta-button">
         Get Quote
-      </button>
+      </a>
     </div>
     
     <!-- Mobile Menu Button -->
@@ -62,16 +62,16 @@
     <nav class="nav-mobile">
       <a href="/" class="nav-link-mobile" on:click={closeMenu}>Home</a>
       <a href="/services" class="nav-link-mobile" on:click={closeMenu}>Services</a>
-      <a href="/" class="nav-link-mobile" on:click={closeMenu}>Track Shipment</a>
+      <a href="/track" class="nav-link-mobile" on:click={closeMenu}>Track Shipment</a>
       <a href="/contact" class="nav-link-mobile" on:click={closeMenu}>Contact</a>
       <div class="mobile-contact">
         <div class="phone-number-mobile">
           <span class="phone-icon">📞</span>
           <a href="tel:+1234567890" class="phone-link">+1 (234) 567-890</a>
         </div>
-        <button class="cta-button-mobile">
+        <a href="/contact" class="cta-button-mobile">
           Get Quote
-        </button>
+        </a>
       </div>
     </nav>
   </div>
@@ -209,6 +209,8 @@
     box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-decoration: none;
+    display: inline-block;
   }
   
   .cta-button:hover {
@@ -350,6 +352,9 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
   }
   
   .cta-button-mobile:hover {

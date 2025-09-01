@@ -107,7 +107,7 @@
           class="input-field pr-12 {isValid ? 'border-green-500 focus:border-green-500 focus:ring-green-500' : ''}"
           maxlength="14"
           autocomplete="off"
-          style="color: #1f2937; background-color: white;"
+          style="color: #1f2937 !important; background-color: white !important; border: 2px solid #d1d5db !important;"
         />
         {#if isValid}
           <div class="absolute inset-y-0 right-0 flex items-center pr-3">
