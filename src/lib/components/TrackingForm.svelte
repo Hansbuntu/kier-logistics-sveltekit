@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { trackingStore } from '$lib/stores/trackingStore.js';
+  import { trackingStore } from '$lib/stores/trackingStore';
   
   const dispatch = createEventDispatcher();
 

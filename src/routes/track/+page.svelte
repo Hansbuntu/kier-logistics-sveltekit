@@ -1,7 +1,7 @@
 <script>
   import TrackingForm from '$lib/components/TrackingForm.svelte';
   import Footer from '$lib/components/Footer.svelte';
-  import { trackingStore } from '$lib/stores/trackingStore.js';
+  import { trackingStore } from '$lib/stores/trackingStore';
   
   let trackingData = null;
   let recentCodes = [];

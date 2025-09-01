@@ -3,7 +3,7 @@
   import TrustIndicators from '$lib/components/TrustIndicators.svelte';
   import ServicesOverview from '$lib/components/ServicesOverview.svelte';
   import Footer from '$lib/components/Footer.svelte';
-  import { trackingStore } from '$lib/stores/trackingStore.js';
+  import { trackingStore } from '$lib/stores/trackingStore';
 
   let trackingData = null;
   let loading = false;
