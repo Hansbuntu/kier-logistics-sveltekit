@@ -301,6 +301,7 @@
   }
   
   .mobile-menu.open {
+    display: block;
     transform: translateY(0);
     opacity: 1;
   }
