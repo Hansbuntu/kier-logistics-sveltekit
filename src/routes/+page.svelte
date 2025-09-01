@@ -108,7 +108,7 @@
         <div class="feature-icon">💎</div>
         <h3>Specialized Handling</h3>
         <p>Expert care for precious metals with temperature control and chain of custody</p>
-      </div>
+        </div>
           </div>
         </div>
 </section>
@@ -126,8 +126,8 @@
         <button class="cta-primary">Get Free Quote</button>
         <button class="cta-secondary">Contact Sales</button>
       </div>
-    </div>
-  </div>
+        </div>
+      </div>
 </section>
 
 <!-- Notification Display -->
