@@ -15,17 +15,13 @@
     }
   });
   
-  function handleTrackingSubmit(event) {
-    const trackingCode = event.detail;
-    console.log('Tracking submitted:', trackingCode);
-  }
-  
   function toggleFAQ() {
     showFAQ = !showFAQ;
   }
   
-  function clearRecentCodes() {
-    recentCodes = [];
+  function handleTrackingSubmit(event) {
+    const trackingCode = event.detail;
+    console.log('Tracking submitted from track page:', trackingCode);
   }
 </script>
 
@@ -44,29 +40,29 @@
   </div>
 </section>
 
-<!-- Main Tracking Section -->
+<!-- Tracking Section -->
 <section class="tracking-section">
   <div class="container">
     <div class="tracking-container">
-      <div class="tracking-main">
-        <div class="tracking-header">
-          <h2>Enter Your Tracking Code</h2>
-          <p>Format: XXX-XXXX-XXXX (e.g., KLG-2024-001A)</p>
-        </div>
+      <div class="tracking-form-wrapper">
+        <h2>Enter Your Tracking Code</h2>
+        <p class="tracking-subtitle">Track your shipment with our secure, real-time monitoring system</p>
         
         <TrackingForm on:submit={handleTrackingSubmit} />
+        
+        <div class="tracking-helper">
+          <h3>📋 Tracking Code Format</h3>
+          <p><strong>Format:</strong> XXX-XXXX-XXXX (e.g., KLG-2024-001A)</p>
+          <p class="helper-note">Your tracking code should be 12 characters long with hyphens separating each section</p>
+        </div>
       </div>
       
-      <!-- Recent Tracking Codes -->
       {#if recentCodes.length > 0}
         <div class="recent-codes">
-          <div class="recent-header">
-            <h3>Recent Tracking Codes</h3>
-            <button class="clear-btn" on:click={clearRecentCodes}>Clear</button>
-          </div>
+          <h3>🔍 Recent Tracking Codes</h3>
           <div class="codes-list">
             {#each recentCodes as code}
-              <button class="code-item" on:click={() => window.location.href = `/?code=${code}`}>
+              <button class="recent-code-btn" on:click={() => window.location.href = `/?code=${code}`}>
                 {code}
               </button>
             {/each}
@@ -93,7 +89,7 @@
         </button>
         {#if showFAQ}
           <div class="faq-answer">
-            <p>Tracking is updated in real-time throughout your shipment's journey. GPS coordinates are refreshed every 15 minutes, and status updates are provided at each checkpoint. You'll receive instant notifications for any significant events or delays.</p>
+            <p>Tracking updates occur in real-time with GPS coordinates updated every 15 minutes during transit. Major status changes (pickup, delivery, custody transfers) are updated immediately.</p>
           </div>
         {/if}
       </div>
@@ -105,7 +101,7 @@
         </button>
         {#if showFAQ}
           <div class="faq-answer">
-            <p>If your tracking code isn't working, please verify you've entered it correctly. Tracking codes are case-sensitive and must include hyphens. If the issue persists, contact our 24/7 support line at +1 (555) 999-GOLD for immediate assistance.</p>
+            <p>If your tracking code isn't working, please verify the format (XXX-XXXX-XXXX) and check for any typos. If the issue persists, contact our 24/7 support line at +1 (555) 999-GOLD.</p>
           </div>
         {/if}
       </div>
@@ -117,7 +113,7 @@
         </button>
         {#if showFAQ}
           <div class="faq-answer">
-            <p>Delivery confirmation is sent immediately upon successful delivery and signature verification. You'll receive an email confirmation, SMS notification, and can download a digital delivery report. Physical documentation is also provided upon request.</p>
+            <p>Delivery confirmation is sent immediately upon successful delivery and signature verification. You'll receive an email notification and can download the delivery report from your tracking page.</p>
           </div>
         {/if}
       </div>
@@ -129,7 +125,7 @@
         </button>
         {#if showFAQ}
           <div class="faq-answer">
-            <p>To set up tracking notifications, simply enter your tracking code and click "Enable Notifications" in the tracking results. You can choose to receive updates via email, SMS, or both. Notifications are sent for status changes, delays, and delivery confirmation.</p>
+            <p>To receive tracking notifications, simply enter your tracking code and click "Enable Notifications" on the tracking results page. You'll receive updates via email and SMS for all major status changes.</p>
           </div>
         {/if}
       </div>
@@ -137,43 +133,43 @@
   </div>
 </section>
 
-<!-- Tracking Features -->
+<!-- Tracking Features Section -->
 <section class="features-section">
   <div class="container">
     <div class="section-header">
       <h2>Advanced Tracking Features</h2>
-      <p>Professional tracking capabilities for your precious cargo</p>
+      <p>Professional-grade tracking capabilities for your precious cargo</p>
     </div>
     
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">📍</div>
-        <h3>Real-Time GPS</h3>
-        <p>Live location tracking with precise coordinates and route visualization</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">📱</div>
-        <h3>Instant Notifications</h3>
-        <p>Get alerts for status changes, delays, and important milestones</p>
+        <h3>Real-Time GPS Tracking</h3>
+        <p>Live location updates with precise coordinates and estimated arrival times</p>
       </div>
       
       <div class="feature-card">
         <div class="feature-icon">🔒</div>
         <h3>Chain of Custody</h3>
-        <p>Complete documentation of every handoff and security checkpoint</p>
+        <p>Complete documentation of every handoff and transfer throughout the journey</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Mobile Notifications</h3>
+        <p>Instant alerts for status changes, delays, and delivery confirmations</p>
       </div>
       
       <div class="feature-card">
         <div class="feature-icon">📊</div>
         <h3>Detailed Reports</h3>
-        <p>Download comprehensive tracking reports for your records</p>
+        <p>Comprehensive tracking reports with timestamps and location history</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Customer Support -->
+<!-- Customer Support Section -->
 <section class="support-section">
   <div class="container">
     <div class="support-content">
@@ -199,7 +195,7 @@
           <div class="support-option">
             <span class="support-icon">💬</span>
             <div>
-              <strong>Live Chat:</strong> Available during business hours
+              <strong>Live Chat:</strong> Available on tracking results page
             </div>
           </div>
         </div>
@@ -250,108 +246,113 @@
   
   /* Tracking Section */
   .tracking-section {
-    padding: 4rem 0;
+    padding: 5rem 0;
     background: white;
   }
   
   .tracking-container {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 3rem;
-    align-items: start;
+    max-width: 800px;
+    margin: 0 auto;
   }
   
-  .tracking-main {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 16px;
-    padding: 2rem;
-    border: 1px solid rgba(30, 58, 138, 0.1);
-  }
-  
-  .tracking-header {
+  .tracking-form-wrapper {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
   
-  .tracking-header h2 {
+  .tracking-form-wrapper h2 {
     font-size: 2rem;
     font-weight: 700;
     color: #1e3a8a;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
   
-  .tracking-header p {
+  .tracking-subtitle {
+    color: #64748b;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .tracking-helper {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid rgba(30, 58, 138, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+    text-align: left;
+  }
+  
+  .tracking-helper h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+  }
+  
+  .tracking-helper p {
+    color: #374151;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+  
+  .helper-note {
     color: #6b7280;
-    font-size: 1rem;
+    font-size: 0.875rem;
+    font-style: italic;
   }
   
   /* Recent Codes */
   .recent-codes {
-    background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 1px solid rgba(30, 58, 138, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
   }
   
-  .recent-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .recent-header h3 {
-    font-size: 1.125rem;
+  .recent-codes h3 {
+    font-size: 1.25rem;
     font-weight: 600;
     color: #1e3a8a;
-  }
-  
-  .clear-btn {
-    background: none;
-    border: none;
-    color: #6b7280;
-    font-size: 0.875rem;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  
-  .clear-btn:hover {
-    color: #374151;
+    margin-bottom: 1.5rem;
   }
   
   .codes-list {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
   }
   
-  .code-item {
-    background: #f3f4f6;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 0.75rem;
-    text-align: left;
+  .recent-code-btn {
+    background: white;
+    border: 2px solid rgba(30, 58, 138, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    color: #1e3a8a;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: monospace;
     font-size: 0.875rem;
   }
   
-  .code-item:hover {
-    background: #e5e7eb;
-    border-color: #d1d5db;
+  .recent-code-btn:hover {
+    border-color: #fbbf24;
+    background: #fef3c7;
+    transform: translateY(-2px);
   }
   
   /* FAQ Section */
   .faq-section {
-    padding: 4rem 0;
+    padding: 5rem 0;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   }
   
   .section-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
   }
   
   .section-header h2 {
@@ -394,7 +395,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 500;
     color: #1e3a8a;
     transition: background-color 0.3s ease;
   }
@@ -413,26 +414,27 @@
     padding: 0 1.5rem 1.5rem;
     color: #64748b;
     line-height: 1.6;
+    border-top: 1px solid #e5e7eb;
   }
   
   /* Features Section */
   .features-section {
-    padding: 4rem 0;
+    padding: 5rem 0;
     background: white;
   }
   
   .features-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
   }
   
   .feature-card {
-    text-align: center;
-    padding: 2rem 1rem;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 1px solid rgba(30, 58, 138, 0.1);
     border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
     transition: all 0.3s ease;
   }
   
@@ -463,7 +465,7 @@
   
   /* Support Section */
   .support-section {
-    padding: 4rem 0;
+    padding: 5rem 0;
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
     color: white;
   }
@@ -471,8 +473,8 @@
   .support-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 3rem;
-    align-items: center;
+    gap: 4rem;
+    align-items: start;
   }
   
   .support-info h2 {
@@ -506,7 +508,6 @@
   
   .support-icon {
     font-size: 1.5rem;
-    color: #fbbf24;
   }
   
   .support-cta {
@@ -519,7 +520,7 @@
   }
   
   .support-cta h3 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1rem;
   }
@@ -540,29 +541,26 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
   }
   
   .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: white;
+    transform: translateY(-2px);
   }
   
   /* Mobile Responsiveness */
   @media (max-width: 1024px) {
-    .tracking-container {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-    
     .features-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr;
       gap: 1.5rem;
     }
     
     .support-content {
       grid-template-columns: 1fr;
       gap: 2rem;
-      text-align: center;
     }
   }
   
@@ -579,22 +577,22 @@
       font-size: 2rem;
     }
     
-    .tracking-header h2 {
+    .tracking-form-wrapper h2 {
       font-size: 1.75rem;
     }
     
-    .features-grid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
+    .support-info h2 {
+      font-size: 1.75rem;
     }
     
-    .faq-question {
-      font-size: 1rem;
-      padding: 1.25rem;
+    .codes-list {
+      flex-direction: column;
+      align-items: center;
     }
     
-    .faq-answer {
-      padding: 0 1.25rem 1.25rem;
+    .recent-code-btn {
+      width: 100%;
+      max-width: 300px;
     }
   }
   
@@ -607,16 +605,24 @@
       font-size: 1.75rem;
     }
     
-    .tracking-header h2 {
+    .tracking-form-wrapper h2 {
       font-size: 1.5rem;
     }
     
-    .tracking-main {
+    .support-info h2 {
+      font-size: 1.5rem;
+    }
+    
+    .tracking-helper {
+      padding: 1.5rem;
+    }
+    
+    .recent-codes {
       padding: 1.5rem;
     }
     
     .feature-card {
-      padding: 1.5rem 1rem;
+      padding: 1.5rem;
     }
     
     .support-cta {

@@ -4,7 +4,7 @@
   import ServicesOverview from '$lib/components/ServicesOverview.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { trackingStore } from '$lib/stores/trackingStore.js';
-  
+
   let trackingData = null;
   let loading = false;
   let error = null;
@@ -56,15 +56,15 @@
         <h2 class="tracking-title">Track Your Precious Cargo</h2>
         <p class="tracking-subtitle">Enter your tracking code to monitor your shipment in real-time</p>
         <TrackingForm on:submit={handleTrackingSubmit} />
-      </div>
-    </div>
+              </div>
+            </div>
     
     <div class="hero-visual">
       <div class="hero-image">
         <div class="gold-bars">🥇</div>
         <div class="security-shield">🛡️</div>
         <div class="global-network">🌍</div>
-      </div>
+        </div>
     </div>
   </div>
 </section>
@@ -84,14 +84,14 @@
         Decades of experience in precious metals logistics with unmatched security and reliability
       </p>
     </div>
-    
+
     <div class="features-grid">
       <div class="feature-item">
         <div class="feature-icon">🔒</div>
         <h3>Maximum Security</h3>
         <p>Multi-layered security protocols with armed escorts and 24/7 surveillance</p>
-      </div>
-      
+    </div>
+    
       <div class="feature-item">
         <div class="feature-icon">⚡</div>
         <h3>Real-time Updates</h3>
@@ -109,8 +109,8 @@
         <h3>Specialized Handling</h3>
         <p>Expert care for precious metals with temperature control and chain of custody</p>
       </div>
-    </div>
-  </div>
+          </div>
+        </div>
 </section>
 
 <!-- Call to Action Section -->
@@ -134,10 +134,10 @@
 {#if notification}
   <div class="notification {notification.type}">
     {notification.message}
-  </div>
-{/if}
+    </div>
+  {/if}
 
-<Footer />
+  <Footer />
 
 <style>
   /* Hero Section */

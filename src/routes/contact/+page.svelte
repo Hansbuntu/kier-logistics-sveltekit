@@ -14,6 +14,7 @@
   let submitted = false;
 
   function handleSubmit() {
+    // Handle form submission
     submitted = true;
     console.log('Contact form submitted:', formData);
   }
@@ -72,12 +73,93 @@
         <div class="address-icon">🏢</div>
         <div class="address-content">
           <h3>Business Address</h3>
-          <p class="address">Kier Logics International</p>
+          <p class="address">Kier Logics</p>
           <p class="address">123 Financial District Plaza</p>
           <p class="address">Suite 1500</p>
           <p class="address">New York, NY 10005</p>
           <p class="address">United States</p>
         </div>
+      </div>
+      
+      <div class="response-commitment">
+        <h3>Response Time Commitment</h3>
+        <p>We respond within <strong>2 hours</strong> during business hours</p>
+        <div class="commitment-badge">
+          <span>⚡</span>
+          <span>Fast Response</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="why-choose-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Why Choose Kier Logics?</h2>
+      <p>Decades of experience in precious metals logistics with unmatched security and reliability</p>
+    </div>
+    
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🔒</div>
+        <h3>Maximum Security</h3>
+        <p>Multi-layered security protocols with armed escorts and 24/7 surveillance</p>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <h3>Real-time Updates</h3>
+        <p>Track your shipment every step of the way with our advanced monitoring system</p>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">🌍</div>
+        <h3>Global Reach</h3>
+        <p>Worldwide logistics network with local expertise and regulatory compliance</p>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">💎</div>
+        <h3>Specialized Handling</h3>
+        <p>Expert care for precious metals with temperature control and chain of custody</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Security Certifications -->
+<section class="certifications-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Security Certifications</h2>
+      <p>Our commitment to security is backed by industry-leading certifications</p>
+    </div>
+    
+    <div class="certifications-grid">
+      <div class="certification-item">
+        <div class="cert-icon">🛡️</div>
+        <h3>ISO 28000</h3>
+        <p>Supply Chain Security Management</p>
+      </div>
+      
+      <div class="certification-item">
+        <div class="cert-icon">🔐</div>
+        <h3>TSA Certified</h3>
+        <p>Transportation Security Administration</p>
+      </div>
+      
+      <div class="certification-item">
+        <div class="cert-icon">🏆</div>
+        <h3>Lloyd's Approved</h3>
+        <p>Insurance Underwriter Certification</p>
+      </div>
+      
+      <div class="certification-item">
+        <div class="cert-icon">🌐</div>
+        <h3>IATA Member</h3>
+        <p>International Air Transport Association</p>
       </div>
     </div>
   </div>
@@ -89,14 +171,14 @@
     <div class="form-container">
       <div class="form-header">
         <h2>Send Us a Message</h2>
-        <p>We respond within 2 hours during business hours</p>
+        <p>Fill out the form below and we'll get back to you within 2 hours during business hours</p>
       </div>
       
       {#if submitted}
         <div class="success-message">
           <div class="success-icon">✅</div>
           <h3>Message Sent Successfully!</h3>
-          <p>Thank you for contacting Kier Logics. We'll respond within 2 hours during business hours.</p>
+          <p>Thank you for contacting Kier Logics. We've received your message and will respond within 2 hours during business hours.</p>
           <button class="btn-secondary" on:click={() => submitted = false}>
             Send Another Message
           </button>
@@ -158,11 +240,11 @@
               <label for="service">Service Needed</label>
               <select id="service" bind:value={formData.service} class="form-input">
                 <option value="">Select Service</option>
-                <option value="gold-shipping">Gold Shipping</option>
+                <option value="gold">Gold Shipping</option>
                 <option value="precious-metals">Precious Metals</option>
-                <option value="insurance-quote">Insurance Quote</option>
-                <option value="custom-solution">Custom Solution</option>
-                <option value="general-inquiry">General Inquiry</option>
+                <option value="insurance">Insurance Quote</option>
+                <option value="custom">Custom Solution</option>
+                <option value="general">General Inquiry</option>
               </select>
             </div>
             
@@ -187,7 +269,7 @@
               required 
               rows="5"
               class="form-input"
-              placeholder="Tell us about your shipping needs, questions, or requirements..."
+              placeholder="Tell us about your shipping needs, questions, or how we can help you..."
             ></textarea>
           </div>
           
@@ -196,78 +278,6 @@
           </button>
         </form>
       {/if}
-    </div>
-  </div>
-</section>
-
-<!-- Why Choose Us Section -->
-<section class="why-choose-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Why Choose Kier Logics?</h2>
-      <p>Professional expertise and proven track record in precious metals logistics</p>
-    </div>
-    
-    <div class="features-grid">
-      <div class="feature-item">
-        <div class="feature-icon">🔒</div>
-        <h3>Maximum Security</h3>
-        <p>Multi-layered security protocols with armed escorts and 24/7 surveillance</p>
-      </div>
-      
-      <div class="feature-item">
-        <div class="feature-icon">⚡</div>
-        <h3>Real-time Updates</h3>
-        <p>Track your shipment every step of the way with our advanced monitoring system</p>
-      </div>
-      
-      <div class="feature-item">
-        <div class="feature-icon">🌍</div>
-        <h3>Global Reach</h3>
-        <p>Worldwide logistics network with local expertise and regulatory compliance</p>
-      </div>
-      
-      <div class="feature-item">
-        <div class="feature-icon">💎</div>
-        <h3>Specialized Handling</h3>
-        <p>Expert care for precious metals with temperature control and chain of custody</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Security Certifications -->
-<section class="certifications-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Security Certifications</h2>
-      <p>Industry-recognized standards and compliance</p>
-    </div>
-    
-    <div class="certifications-grid">
-      <div class="certification-item">
-        <div class="cert-icon">🛡️</div>
-        <h3>ISO 28000</h3>
-        <p>Supply Chain Security Management</p>
-      </div>
-      
-      <div class="certification-item">
-        <div class="cert-icon">🔐</div>
-        <h3>C-TPAT</h3>
-        <p>Customs-Trade Partnership Against Terrorism</p>
-      </div>
-      
-      <div class="certification-item">
-        <div class="cert-icon">📋</div>
-        <h3>Lloyd's Approved</h3>
-        <p>Insurance Underwriter Certification</p>
-      </div>
-      
-      <div class="certification-item">
-        <div class="cert-icon">🌐</div>
-        <h3>IATA</h3>
-        <p>International Air Transport Association</p>
-      </div>
     </div>
   </div>
 </section>
@@ -304,9 +314,9 @@
     line-height: 1.6;
   }
   
-  /* Contact Info Section */
+  /* Contact Information Section */
   .contact-info-section {
-    padding: 4rem 0;
+    padding: 5rem 0;
     background: white;
   }
   
@@ -314,16 +324,17 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
   }
   
   .contact-card {
     text-align: center;
     padding: 2rem 1rem;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 1px solid rgba(30, 58, 138, 0.1);
     border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    border: 1px solid rgba(30, 58, 138, 0.1);
   }
   
   .contact-card:hover {
@@ -333,8 +344,8 @@
   }
   
   .contact-card.emergency {
-    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-    border-color: #fca5a5;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-color: #f59e0b;
   }
   
   .contact-icon {
@@ -364,34 +375,185 @@
   
   /* Address Section */
   .address-section {
-    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
   }
   
   .address-card {
-    display: inline-flex;
-    align-items: center;
+    display: flex;
     gap: 1.5rem;
     padding: 2rem;
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-    color: white;
+    background: #f8fafc;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(30, 58, 138, 0.1);
   }
   
   .address-icon {
     font-size: 3rem;
-    color: #fbbf24;
+    color: #1e3a8a;
+    flex-shrink: 0;
   }
   
   .address-content h3 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
+    color: #1e3a8a;
     margin-bottom: 1rem;
   }
   
   .address {
-    margin: 0.25rem 0;
-    font-size: 1rem;
+    color: #374151;
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+  }
+  
+  .response-commitment {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  
+  .response-commitment h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+  }
+  
+  .response-commitment p {
+    color: #374151;
+    margin-bottom: 1.5rem;
+  }
+  
+  .commitment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border-radius: 25px;
+    color: #1e3a8a;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Why Choose Us Section */
+  .why-choose-section {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  
+  .section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  
+  .section-header p {
+    font-size: 1.125rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .feature-item {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(30, 58, 138, 0.1);
+  }
+  
+  .feature-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-color: #fbbf24;
+  }
+  
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  
+  .feature-item h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+  }
+  
+  .feature-item p {
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 0.875rem;
+  }
+  
+  /* Certifications Section */
+  .certifications-section {
+    padding: 5rem 0;
+    background: white;
+  }
+  
+  .certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  
+  .certification-item {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(30, 58, 138, 0.1);
+  }
+  
+  .certification-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-color: #fbbf24;
+  }
+  
+  .cert-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  
+  .certification-item h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 0.75rem;
+  }
+  
+  .certification-item p {
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 0.875rem;
   }
   
   /* Contact Form Section */
@@ -404,8 +566,8 @@
     max-width: 800px;
     margin: 0 auto;
     background: white;
-    border-radius: 16px;
     padding: 3rem;
+    border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(30, 58, 138, 0.1);
   }
@@ -419,12 +581,12 @@
     font-size: 2rem;
     font-weight: 700;
     color: #1e3a8a;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
   
   .form-header p {
-    color: #6b7280;
-    font-size: 1rem;
+    color: #64748b;
+    line-height: 1.6;
   }
   
   /* Form Styles */
@@ -435,7 +597,7 @@
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
   }
   
   .form-group {
@@ -508,7 +670,6 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 1rem;
   }
   
   .btn-secondary:hover {
@@ -518,12 +679,16 @@
   /* Success Message */
   .success-message {
     text-align: center;
-    padding: 3rem;
+    padding: 3rem 2rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
   }
   
   .success-icon {
     font-size: 4rem;
     margin-bottom: 1rem;
+    display: block;
   }
   
   .success-message h3 {
@@ -535,121 +700,7 @@
   .success-message p {
     color: #166534;
     margin-bottom: 1.5rem;
-    font-size: 1.125rem;
-  }
-  
-  /* Why Choose Section */
-  .why-choose-section {
-    padding: 5rem 0;
-    background: white;
-  }
-  
-  .section-header {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-  
-  .section-header h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-  }
-  
-  .section-header p {
-    font-size: 1.125rem;
-    color: #64748b;
-    max-width: 600px;
-    margin: 0 auto;
     line-height: 1.6;
-  }
-  
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-  
-  .feature-item {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 1px solid rgba(30, 58, 138, 0.1);
-    border-radius: 16px;
-    padding: 2rem;
-    text-align: center;
-    transition: all 0.3s ease;
-  }
-  
-  .feature-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    border-color: #fbbf24;
-  }
-  
-  .feature-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: block;
-  }
-  
-  .feature-item h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e3a8a;
-    margin-bottom: 1rem;
-  }
-  
-  .feature-item p {
-    color: #64748b;
-    line-height: 1.6;
-    font-size: 0.875rem;
-  }
-  
-  /* Certifications Section */
-  .certifications-section {
-    padding: 4rem 0;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  }
-  
-  .certifications-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-  }
-  
-  .certification-item {
-    text-align: center;
-    padding: 2rem 1rem;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(30, 58, 138, 0.1);
-  }
-  
-  .certification-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    border-color: #fbbf24;
-  }
-  
-  .cert-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: block;
-  }
-  
-  .certification-item h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e3a8a;
-    margin-bottom: 0.75rem;
-  }
-  
-  .certification-item p {
-    color: #64748b;
-    line-height: 1.6;
-    font-size: 0.875rem;
   }
   
   /* Mobile Responsiveness */
@@ -664,6 +715,11 @@
       gap: 1.5rem;
     }
     
+    .address-section {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
     .features-grid {
       grid-template-columns: 1fr;
       gap: 1.5rem;
@@ -671,11 +727,6 @@
     
     .form-row {
       grid-template-columns: 1fr;
-    }
-    
-    .address-card {
-      flex-direction: column;
-      text-align: center;
     }
   }
   
@@ -706,8 +757,8 @@
       padding: 2rem 1.5rem;
     }
     
-    .address-card {
-      padding: 1.5rem;
+    .form-header h2 {
+      font-size: 1.75rem;
     }
   }
   
@@ -729,6 +780,10 @@
     }
     
     .certification-item {
+      padding: 1.5rem 1rem;
+    }
+    
+    .form-container {
       padding: 1.5rem 1rem;
     }
   }
