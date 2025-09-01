@@ -1,7 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": ".svelte-kit/output",
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "sveltekit"
 }
