@@ -9,8 +9,8 @@
       features: [
         'Vault-to-vault transfers',
         'International gold logistics',
-        'Armed security escorts',
-        'Temperature-controlled transport'
+        'Armed escort services',
+        'Chain of custody tracking'
       ]
     },
     {
@@ -20,8 +20,8 @@
       features: [
         'Certified precious metals handling',
         'Temperature-controlled storage options',
-        'Chain of custody documentation',
-        'Multi-modal transportation'
+        'Specialized packaging solutions',
+        'Regulatory compliance expertise'
       ]
     },
     {
@@ -31,7 +31,7 @@
       features: [
         'Lloyd\'s of London underwritten policies',
         'Comprehensive risk management',
-        'All-risk coverage included',
+        'All-risk coverage options',
         'Fast claims processing'
       ]
     },
@@ -42,8 +42,8 @@
       features: [
         'Secure chain of custody documentation',
         'Instant status notifications',
-        '24/7 shipment monitoring',
-        'Mobile app access'
+        'Live location updates',
+        '24/7 monitoring dashboard'
       ]
     },
     {
@@ -53,13 +53,13 @@
       features: [
         'White-glove delivery service',
         'Emergency shipping options',
-        'Specialized handling protocols',
-        'Dedicated account management'
+        'VIP client handling',
+        'Bespoke security protocols'
       ]
     }
   ];
-  
-  let contactForm = {
+
+  let formData = {
     name: '',
     company: '',
     email: '',
@@ -68,33 +68,19 @@
     value: '',
     message: ''
   };
-  
+
   let submitted = false;
-  
+
   function handleSubmit() {
-    // In a real app, this would send to your backend
-    console.log('Service inquiry submitted:', contactForm);
+    // Handle form submission
     submitted = true;
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      submitted = false;
-      contactForm = {
-        name: '',
-        company: '',
-        email: '',
-        phone: '',
-        service: '',
-        value: '',
-        message: ''
-      };
-    }, 3000);
+    console.log('Service inquiry submitted:', formData);
   }
 </script>
 
 <svelte:head>
   <title>Our Services | Kier Logics</title>
-  <meta name="description" content="Professional precious metals logistics services including gold transportation, secure vault-to-vault transfers, and comprehensive insurance coverage." />
+  <meta name="description" content="Professional precious metals logistics services including gold transportation, secure shipping, high-value insurance, and real-time tracking." />
 </svelte:head>
 
 <!-- Hero Section -->
@@ -176,7 +162,7 @@
     <div class="contact-content">
       <div class="contact-info">
         <h2>Get Your Custom Quote</h2>
-        <p>Ready to secure your precious cargo? Our experts are here to help.</p>
+        <p>Ready to secure your precious cargo? Contact us for a personalized quote.</p>
         
         <div class="contact-details">
           <div class="contact-item">
@@ -187,7 +173,7 @@
           </div>
           
           <div class="contact-item">
-            <span class="contact-icon">📧</span>
+            <span class="contact-icon">✉️</span>
             <div>
               <strong>Email:</strong> info@kierlogics.com
             </div>
@@ -206,38 +192,41 @@
         {#if submitted}
           <div class="success-message">
             <h3>Thank You!</h3>
-            <p>Your service inquiry has been submitted. We'll respond within 2 hours during business hours.</p>
+            <p>We've received your service inquiry and will respond within 2 hours during business hours.</p>
+            <button class="btn-secondary" on:click={() => submitted = false}>
+              Send Another Inquiry
+            </button>
           </div>
         {:else}
-          <form on:submit|preventDefault={handleSubmit}>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="name">Full Name *</label>
-                <input 
-                  id="name" 
-                  type="text" 
-                  bind:value={contactForm.name} 
-                  required 
-                  class="form-input"
-                />
-              </div>
-              
-              <div class="form-group">
-                <label for="company">Company Name</label>
-                <input 
-                  id="company" 
-                  type="text" 
-                  bind:value={contactForm.company} 
-                  class="form-input"
-                />
-              </div>
-              
+          <form on:submit|preventDefault={handleSubmit} class="form">
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input 
+                id="name" 
+                type="text" 
+                bind:value={formData.name} 
+                required 
+                class="form-input"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="company">Company Name</label>
+              <input 
+                id="company" 
+                type="text" 
+                bind:value={formData.company} 
+                class="form-input"
+              />
+            </div>
+            
+            <div class="form-row">
               <div class="form-group">
                 <label for="email">Email Address *</label>
                 <input 
                   id="email" 
                   type="email" 
-                  bind:value={contactForm.email} 
+                  bind:value={formData.email} 
                   required 
                   class="form-input"
                 />
@@ -248,15 +237,17 @@
                 <input 
                   id="phone" 
                   type="tel" 
-                  bind:value={contactForm.phone} 
+                  bind:value={formData.phone} 
                   class="form-input"
                 />
               </div>
-              
+            </div>
+            
+            <div class="form-row">
               <div class="form-group">
                 <label for="service">Service Needed</label>
-                <select id="service" bind:value={contactForm.service} class="form-input">
-                  <option value="">Select a service</option>
+                <select id="service" bind:value={formData.service} class="form-input">
+                  <option value="">Select Service</option>
                   <option value="gold">Gold Shipping</option>
                   <option value="precious-metals">Precious Metals</option>
                   <option value="insurance">Insurance Quote</option>
@@ -267,8 +258,8 @@
               
               <div class="form-group">
                 <label for="value">Shipment Value Range</label>
-                <select id="value" bind:value={contactForm.value} class="form-input">
-                  <option value="">Select value range</option>
+                <select id="value" bind:value={formData.value} class="form-input">
+                  <option value="">Select Range</option>
                   <option value="under-100k">Under $100K</option>
                   <option value="100k-500k">$100K-$500K</option>
                   <option value="500k-1m">$500K-$1M</option>
@@ -278,19 +269,19 @@
               </div>
             </div>
             
-            <div class="form-group full-width">
+            <div class="form-group">
               <label for="message">Message/Details *</label>
               <textarea 
                 id="message" 
-                bind:value={contactForm.message} 
+                bind:value={formData.message} 
                 required 
                 rows="4"
                 class="form-input"
-                placeholder="Please describe your shipping needs..."
+                placeholder="Tell us about your shipping needs..."
               ></textarea>
             </div>
             
-            <button type="submit" class="submit-btn">
+            <button type="submit" class="btn-primary">
               Request Quote
             </button>
           </form>
@@ -307,7 +298,7 @@
   .hero {
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
     color: white;
-    padding: 6rem 0 4rem 0;
+    padding: 4rem 0;
     text-align: center;
   }
   
@@ -528,35 +519,28 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 1rem;
-    color: #475569;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
   }
   
   .contact-icon {
     font-size: 1.5rem;
-    color: #fbbf24;
   }
   
   /* Form Styles */
-  .contact-form {
-    background: #f8fafc;
-    padding: 2rem;
-    border-radius: 16px;
-    border: 1px solid rgba(30, 58, 138, 0.1);
-  }
-  
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
+  .form {
+    space-y: 1.5rem;
   }
   
   .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
   
-  .form-group.full-width {
-    grid-column: 1 / -1;
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
   
   .form-group label {
@@ -583,8 +567,17 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
   
-  .submit-btn {
-    width: 100%;
+  .form-input::placeholder {
+    color: #9ca3af;
+  }
+  
+  textarea.form-input {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  /* Buttons */
+  .btn-primary {
     background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     color: #1e3a8a;
     border: none;
@@ -597,41 +590,64 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+    width: 100%;
     min-height: 48px;
   }
   
-  .submit-btn:hover {
+  .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   }
   
+  .btn-secondary {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-secondary:hover {
+    background: #4b5563;
+  }
+  
+  /* Success Message */
   .success-message {
     text-align: center;
     padding: 2rem;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    border-radius: 16px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
   }
   
   .success-message h3 {
-    font-size: 1.5rem;
+    color: #166534;
     margin-bottom: 1rem;
+  }
+  
+  .success-message p {
+    color: #166534;
+    margin-bottom: 1.5rem;
   }
   
   /* Mobile Responsiveness */
   @media (max-width: 1024px) {
-    .services-grid {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-    
     .trust-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
     }
     
     .contact-content {
       grid-template-columns: 1fr;
       gap: 2rem;
+    }
+    
+    .form-row {
+      grid-template-columns: 1fr;
     }
   }
   
@@ -654,10 +670,29 @@
     
     .trust-grid {
       grid-template-columns: 1fr;
+      gap: 1rem;
     }
     
-    .form-grid {
-      grid-template-columns: 1fr;
+    .contact-content {
+      gap: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 1.75rem;
+    }
+    
+    .section-title {
+      font-size: 1.75rem;
+    }
+    
+    .service-card {
+      padding: 1.5rem;
+    }
+    
+    .trust-item {
+      padding: 1.5rem 1rem;
     }
   }
 </style>

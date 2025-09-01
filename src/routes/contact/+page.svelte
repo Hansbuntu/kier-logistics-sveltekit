@@ -1,7 +1,7 @@
 <script>
   import Footer from '$lib/components/Footer.svelte';
   
-  let contactForm = {
+  let formData = {
     name: '',
     company: '',
     email: '',
@@ -10,33 +10,18 @@
     value: '',
     message: ''
   };
-  
+
   let submitted = false;
-  
+
   function handleSubmit() {
-    // In a real app, this would send to your backend
-    console.log('Contact form submitted:', contactForm);
     submitted = true;
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      submitted = false;
-      contactForm = {
-        name: '',
-        company: '',
-        email: '',
-        phone: '',
-        service: '',
-        value: '',
-        message: ''
-      };
-    }, 3000);
+    console.log('Contact form submitted:', formData);
   }
 </script>
 
 <svelte:head>
   <title>Contact Us | Kier Logics</title>
-  <meta name="description" content="Contact Kier Logics for secure precious metals shipping. Get in touch for professional logistics solutions and custom quotes." />
+  <meta name="description" content="Contact Kier Logics for secure precious metals shipping. Get in touch for professional logistics services and custom quotes." />
 </svelte:head>
 
 <!-- Hero Section -->
@@ -56,29 +41,29 @@
       <div class="contact-card">
         <div class="contact-icon">📞</div>
         <h3>Phone</h3>
-        <p>+1 (555) 123-4567</p>
+        <p class="contact-detail">+1 (555) 123-4567</p>
         <p class="contact-note">Main business line</p>
       </div>
       
       <div class="contact-card">
-        <div class="contact-icon">📧</div>
+        <div class="contact-icon">✉️</div>
         <h3>Email</h3>
-        <p>info@kierlogics.com</p>
+        <p class="contact-detail">info@kierlogics.com</p>
         <p class="contact-note">General inquiries</p>
       </div>
       
       <div class="contact-card emergency">
         <div class="contact-icon">🆘</div>
         <h3>Emergency Line</h3>
-        <p>+1 (555) 999-GOLD</p>
+        <p class="contact-detail">+1 (555) 999-GOLD</p>
         <p class="contact-note">24/7 urgent support</p>
       </div>
       
       <div class="contact-card">
         <div class="contact-icon">🕒</div>
         <h3>Business Hours</h3>
-        <p>Monday-Friday: 8AM-6PM EST</p>
-        <p>Saturday: 9AM-2PM EST</p>
+        <p class="contact-detail">Monday-Friday 8AM-6PM EST</p>
+        <p class="contact-note">Saturday 9AM-2PM EST</p>
       </div>
     </div>
     
@@ -87,21 +72,11 @@
         <div class="address-icon">🏢</div>
         <div class="address-content">
           <h3>Business Address</h3>
-          <p>Kier Logics Headquarters</p>
-          <p>123 Financial District Plaza</p>
-          <p>Suite 1500</p>
-          <p>New York, NY 10005</p>
-          <p>United States</p>
-        </div>
-      </div>
-      
-      <div class="map-placeholder">
-        <div class="map-content">
-          <div class="map-icon">🗺️</div>
-          <h3>Map Location</h3>
-          <p>Financial District, New York</p>
-          <p>Near Wall Street & Federal Reserve</p>
-          <button class="map-btn">View on Google Maps</button>
+          <p class="address">Kier Logics International</p>
+          <p class="address">123 Financial District Plaza</p>
+          <p class="address">Suite 1500</p>
+          <p class="address">New York, NY 10005</p>
+          <p class="address">United States</p>
         </div>
       </div>
     </div>
@@ -121,7 +96,10 @@
         <div class="success-message">
           <div class="success-icon">✅</div>
           <h3>Message Sent Successfully!</h3>
-          <p>Thank you for contacting Kier Logics. We'll get back to you within 2 hours during business hours.</p>
+          <p>Thank you for contacting Kier Logics. We'll respond within 2 hours during business hours.</p>
+          <button class="btn-secondary" on:click={() => submitted = false}>
+            Send Another Message
+          </button>
         </div>
       {:else}
         <form on:submit|preventDefault={handleSubmit} class="contact-form">
@@ -131,7 +109,7 @@
               <input 
                 id="name" 
                 type="text" 
-                bind:value={contactForm.name} 
+                bind:value={formData.name} 
                 required 
                 class="form-input"
                 placeholder="Enter your full name"
@@ -143,7 +121,7 @@
               <input 
                 id="company" 
                 type="text" 
-                bind:value={contactForm.company} 
+                bind:value={formData.company} 
                 class="form-input"
                 placeholder="Enter company name"
               />
@@ -156,7 +134,7 @@
               <input 
                 id="email" 
                 type="email" 
-                bind:value={contactForm.email} 
+                bind:value={formData.email} 
                 required 
                 class="form-input"
                 placeholder="Enter your email address"
@@ -168,7 +146,7 @@
               <input 
                 id="phone" 
                 type="tel" 
-                bind:value={contactForm.phone} 
+                bind:value={formData.phone} 
                 class="form-input"
                 placeholder="Enter phone number"
               />
@@ -178,20 +156,20 @@
           <div class="form-row">
             <div class="form-group">
               <label for="service">Service Needed</label>
-              <select id="service" bind:value={contactForm.service} class="form-input">
-                <option value="">Select a service</option>
-                <option value="gold">Gold Shipping</option>
+              <select id="service" bind:value={formData.service} class="form-input">
+                <option value="">Select Service</option>
+                <option value="gold-shipping">Gold Shipping</option>
                 <option value="precious-metals">Precious Metals</option>
-                <option value="insurance">Insurance Quote</option>
-                <option value="custom">Custom Solution</option>
-                <option value="general">General Inquiry</option>
+                <option value="insurance-quote">Insurance Quote</option>
+                <option value="custom-solution">Custom Solution</option>
+                <option value="general-inquiry">General Inquiry</option>
               </select>
             </div>
             
             <div class="form-group">
               <label for="value">Shipment Value Range</label>
-              <select id="value" bind:value={contactForm.value} class="form-input">
-                <option value="">Select value range</option>
+              <select id="value" bind:value={formData.value} class="form-input">
+                <option value="">Select Range</option>
                 <option value="under-100k">Under $100K</option>
                 <option value="100k-500k">$100K-$500K</option>
                 <option value="500k-1m">$500K-$1M</option>
@@ -201,19 +179,19 @@
             </div>
           </div>
           
-          <div class="form-group full-width">
+          <div class="form-group">
             <label for="message">Message/Details *</label>
             <textarea 
               id="message" 
-              bind:value={contactForm.message} 
+              bind:value={formData.message} 
               required 
               rows="5"
               class="form-input"
-              placeholder="Please describe your inquiry or shipping needs in detail..."
+              placeholder="Tell us about your shipping needs, questions, or requirements..."
             ></textarea>
           </div>
           
-          <button type="submit" class="submit-btn">
+          <button type="submit" class="btn-primary">
             Send Message
           </button>
         </form>
@@ -227,12 +205,12 @@
   <div class="container">
     <div class="section-header">
       <h2>Why Choose Kier Logics?</h2>
-      <p>Professional logistics solutions with unmatched security and reliability</p>
+      <p>Professional expertise and proven track record in precious metals logistics</p>
     </div>
     
     <div class="features-grid">
       <div class="feature-item">
-        <div class="feature-icon">🛡️</div>
+        <div class="feature-icon">🔒</div>
         <h3>Maximum Security</h3>
         <p>Multi-layered security protocols with armed escorts and 24/7 surveillance</p>
       </div>
@@ -263,30 +241,30 @@
   <div class="container">
     <div class="section-header">
       <h2>Security Certifications</h2>
-      <p>Meeting the highest industry standards for precious metals logistics</p>
+      <p>Industry-recognized standards and compliance</p>
     </div>
     
-    <div class="cert-grid">
-      <div class="cert-item">
-        <div class="cert-icon">🔒</div>
+    <div class="certifications-grid">
+      <div class="certification-item">
+        <div class="cert-icon">🛡️</div>
         <h3>ISO 28000</h3>
         <p>Supply Chain Security Management</p>
       </div>
       
-      <div class="cert-item">
-        <div class="cert-icon">🛡️</div>
+      <div class="certification-item">
+        <div class="cert-icon">🔐</div>
         <h3>C-TPAT</h3>
         <p>Customs-Trade Partnership Against Terrorism</p>
       </div>
       
-      <div class="cert-item">
+      <div class="certification-item">
         <div class="cert-icon">📋</div>
-        <h3>ISO 9001</h3>
-        <p>Quality Management Systems</p>
+        <h3>Lloyd's Approved</h3>
+        <p>Insurance Underwriter Certification</p>
       </div>
       
-      <div class="cert-item">
-        <div class="cert-icon">🌍</div>
+      <div class="certification-item">
+        <div class="cert-icon">🌐</div>
         <h3>IATA</h3>
         <p>International Air Transport Association</p>
       </div>
@@ -301,7 +279,7 @@
   .hero {
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
     color: white;
-    padding: 6rem 0 4rem 0;
+    padding: 4rem 0;
     text-align: center;
   }
   
@@ -328,7 +306,7 @@
   
   /* Contact Info Section */
   .contact-info-section {
-    padding: 5rem 0;
+    padding: 4rem 0;
     background: white;
   }
   
@@ -336,15 +314,15 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
   }
   
   .contact-card {
     text-align: center;
     padding: 2rem 1rem;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 16px;
     border: 1px solid rgba(30, 58, 138, 0.1);
+    border-radius: 16px;
     transition: all 0.3s ease;
   }
   
@@ -372,98 +350,48 @@
     margin-bottom: 0.75rem;
   }
   
-  .contact-card p {
-    color: #64748b;
-    line-height: 1.6;
+  .contact-detail {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
     margin-bottom: 0.5rem;
   }
   
   .contact-note {
     font-size: 0.875rem;
-    color: #9ca3af;
-    font-style: italic;
+    color: #6b7280;
   }
   
   /* Address Section */
   .address-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-  }
-  
-  .address-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.5rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 16px;
-    border: 1px solid rgba(30, 58, 138, 0.1);
-  }
-  
-  .address-icon {
-    font-size: 2.5rem;
-    color: #fbbf24;
-    flex-shrink: 0;
-  }
-  
-  .address-content h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e3a8a;
-    margin-bottom: 1rem;
-  }
-  
-  .address-content p {
-    color: #64748b;
-    line-height: 1.6;
-    margin-bottom: 0.25rem;
-  }
-  
-  .map-placeholder {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border-radius: 16px;
-    border: 1px solid rgba(30, 58, 138, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
     text-align: center;
   }
   
-  .map-icon {
+  .address-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .address-icon {
     font-size: 3rem;
-    margin-bottom: 1rem;
-    display: block;
+    color: #fbbf24;
   }
   
-  .map-content h3 {
-    font-size: 1.25rem;
+  .address-content h3 {
+    font-size: 1.5rem;
     font-weight: 600;
-    color: #1e3a8a;
-    margin-bottom: 0.75rem;
-  }
-  
-  .map-content p {
-    color: #64748b;
-    line-height: 1.6;
     margin-bottom: 1rem;
   }
   
-  .map-btn {
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    color: #1e3a8a;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .map-btn:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  .address {
+    margin: 0.25rem 0;
+    font-size: 1rem;
   }
   
   /* Contact Form Section */
@@ -476,9 +404,10 @@
     max-width: 800px;
     margin: 0 auto;
     background: white;
-    padding: 3rem;
     border-radius: 16px;
+    padding: 3rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(30, 58, 138, 0.1);
   }
   
   .form-header {
@@ -494,10 +423,11 @@
   }
   
   .form-header p {
-    color: #64748b;
-    font-size: 1.125rem;
+    color: #6b7280;
+    font-size: 1rem;
   }
   
+  /* Form Styles */
   .contact-form {
     space-y: 1.5rem;
   }
@@ -506,15 +436,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
-    margin-bottom: 1.5rem;
   }
   
   .form-group {
     margin-bottom: 1.5rem;
-  }
-  
-  .form-group.full-width {
-    grid-column: 1 / -1;
   }
   
   .form-group label {
@@ -541,8 +466,17 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
   
-  .submit-btn {
-    width: 100%;
+  .form-input::placeholder {
+    color: #9ca3af;
+  }
+  
+  textarea.form-input {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  /* Buttons */
+  .btn-primary {
     background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     color: #1e3a8a;
     border: none;
@@ -555,31 +489,53 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+    width: 100%;
     min-height: 48px;
   }
   
-  .submit-btn:hover {
+  .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   }
   
+  .btn-secondary {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .btn-secondary:hover {
+    background: #4b5563;
+  }
+  
+  /* Success Message */
   .success-message {
     text-align: center;
     padding: 3rem;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    border-radius: 16px;
   }
   
   .success-icon {
-    font-size: 3rem;
+    font-size: 4rem;
     margin-bottom: 1rem;
   }
   
   .success-message h3 {
-    font-size: 1.5rem;
+    color: #166534;
     margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  
+  .success-message p {
+    color: #166534;
+    margin-bottom: 1.5rem;
+    font-size: 1.125rem;
   }
   
   /* Why Choose Section */
@@ -598,6 +554,7 @@
     font-weight: 700;
     color: #1e3a8a;
     margin-bottom: 1rem;
+    line-height: 1.2;
   }
   
   .section-header p {
@@ -605,6 +562,7 @@
     color: #64748b;
     max-width: 600px;
     margin: 0 auto;
+    line-height: 1.6;
   }
   
   .features-grid {
@@ -614,11 +572,11 @@
   }
   
   .feature-item {
-    text-align: center;
-    padding: 2rem;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 16px;
     border: 1px solid rgba(30, 58, 138, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
     transition: all 0.3s ease;
   }
   
@@ -644,21 +602,22 @@
   .feature-item p {
     color: #64748b;
     line-height: 1.6;
+    font-size: 0.875rem;
   }
   
   /* Certifications Section */
   .certifications-section {
-    padding: 5rem 0;
+    padding: 4rem 0;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   }
   
-  .cert-grid {
+  .certifications-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
   }
   
-  .cert-item {
+  .certification-item {
     text-align: center;
     padding: 2rem 1rem;
     background: white;
@@ -668,7 +627,7 @@
     border: 1px solid rgba(30, 58, 138, 0.1);
   }
   
-  .cert-item:hover {
+  .certification-item:hover {
     transform: translateY(-8px);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     border-color: #fbbf24;
@@ -680,14 +639,14 @@
     display: block;
   }
   
-  .cert-item h3 {
+  .certification-item h3 {
     font-size: 1.25rem;
     font-weight: 600;
     color: #1e3a8a;
     margin-bottom: 0.75rem;
   }
   
-  .cert-item p {
+  .certification-item p {
     color: #64748b;
     line-height: 1.6;
     font-size: 0.875rem;
@@ -697,14 +656,26 @@
   @media (max-width: 1024px) {
     .contact-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
     }
     
-    .cert-grid {
+    .certifications-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
     }
     
-    .address-section {
+    .features-grid {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .address-card {
+      flex-direction: column;
+      text-align: center;
     }
   }
   
@@ -717,28 +688,48 @@
       font-size: 1rem;
     }
     
+    .section-header h2 {
+      font-size: 2rem;
+    }
+    
     .contact-grid {
       grid-template-columns: 1fr;
+      gap: 1rem;
     }
     
-    .features-grid {
+    .certifications-grid {
       grid-template-columns: 1fr;
-    }
-    
-    .cert-grid {
-      grid-template-columns: 1fr;
+      gap: 1rem;
     }
     
     .form-container {
       padding: 2rem 1.5rem;
     }
     
-    .form-row {
-      grid-template-columns: 1fr;
+    .address-card {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 1.75rem;
     }
     
     .section-header h2 {
-      font-size: 2rem;
+      font-size: 1.75rem;
+    }
+    
+    .contact-card {
+      padding: 1.5rem 1rem;
+    }
+    
+    .feature-item {
+      padding: 1.5rem;
+    }
+    
+    .certification-item {
+      padding: 1.5rem 1rem;
     }
   }
 </style>
