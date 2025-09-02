@@ -1,7 +1,7 @@
 <script>
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import TrackingResults from '$lib/components/TrackingResults.svelte';
+  import TrackingMap from '$lib/components/TrackingMap.svelte';
   import { trackingStore } from '$lib/stores/trackingStore';
   import Footer from '$lib/components/Footer.svelte';
 
@@ -30,6 +30,27 @@
       loading = false;
     }
   });
+  
+  function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+  
+  function getStatusColor(status) {
+    switch (status?.toLowerCase()) {
+      case 'delivered': return 'text-green-600 bg-green-100';
+      case 'in-transit': return 'text-blue-600 bg-blue-100';
+      case 'processing': return 'text-yellow-600 bg-yellow-100';
+      case 'pending': return 'text-gray-600 bg-gray-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  }
 </script>
 
 <svelte:head>
@@ -105,7 +126,430 @@
 
     <!-- Tracking Results -->
     {#if trackingData}
-      <TrackingResults {trackingData} />
+      <div class="tracking-details">
+        <!-- Tracking Header -->
+        <div class="tracking-header">
+          <div class="tracking-code-section">
+            <h2 class="tracking-code-title">Tracking Code: {trackingData.trackingCode}</h2>
+            <div class="status-badge {getStatusColor(trackingData.delivery?.currentStatus)}">
+              {trackingData.delivery?.currentStatus || 'Processing'}
+            </div>
+          </div>
+          <div class="last-updated">
+            Last Updated: {formatDate(trackingData.lastUpdated)}
+          </div>
+        </div>
+        
+        <!-- Map Section -->
+        <div class="map-section">
+          <TrackingMap {trackingData} height="500px" />
+        </div>
+        
+        <!-- Details Grid -->
+        <div class="details-grid">
+          <!-- Product Information -->
+          <div class="detail-card">
+            <h3 class="card-title">Product Information</h3>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="info-label">Type:</span>
+                <span class="info-value">{trackingData.product?.type || 'Gold Shipment'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Weight:</span>
+                <span class="info-value">{trackingData.product?.weight || 0} {trackingData.product?.weightUnit || 'kg'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Purity:</span>
+                <span class="info-value">{trackingData.product?.purity || 999.5} {trackingData.product?.purityUnit || '999.5'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Serial Number:</span>
+                <span class="info-value">{trackingData.product?.serialNumber || 'Pending'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Description:</span>
+                <span class="info-value">{trackingData.product?.description || 'Shipment details pending'}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Current Location -->
+          <div class="detail-card">
+            <h3 class="card-title">Current Location</h3>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="info-label">Address:</span>
+                <span class="info-value">{trackingData.currentLocation?.address || 'Processing Center'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">City:</span>
+                <span class="info-value">{trackingData.currentLocation?.city || 'Processing'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Country:</span>
+                <span class="info-value">{trackingData.currentLocation?.country || 'Processing'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Facility:</span>
+                <span class="info-value">{trackingData.currentLocation?.facility || 'Kier Logistics Hub'}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Delivery Information -->
+          <div class="detail-card">
+            <h3 class="card-title">Delivery Information</h3>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="info-label">Status:</span>
+                <span class="info-value status-{trackingData.delivery?.currentStatus || 'pending'}">
+                  {trackingData.delivery?.currentStatus || 'Processing'}
+                </span>
+              </div>
+              {#if trackingData.delivery?.estimatedDelivery}
+                <div class="info-row">
+                  <span class="info-label">Estimated Delivery:</span>
+                  <span class="info-value">{formatDate(trackingData.delivery.estimatedDelivery)}</span>
+                </div>
+              {/if}
+              {#if trackingData.delivery?.etaHours}
+                <div class="info-row">
+                  <span class="info-label">ETA Hours:</span>
+                  <span class="info-value">{trackingData.delivery.etaHours} hours</span>
+                </div>
+              {/if}
+              {#if trackingData.delivery?.delayReason}
+                <div class="info-row">
+                  <span class="info-label">Delay Reason:</span>
+                  <span class="info-value">{trackingData.delivery.delayReason}</span>
+                </div>
+              {/if}
+            </div>
+          </div>
+          
+          <!-- Custody Chain -->
+          {#if trackingData.custodyChain && trackingData.custodyChain.length > 0}
+            <div class="detail-card custody-chain">
+              <h3 class="card-title">Custody Chain</h3>
+              <div class="custody-timeline">
+                {#each trackingData.custodyChain as entry, index}
+                  <div class="custody-entry">
+                    <div class="custody-marker">
+                      <div class="marker-number">{index + 1}</div>
+                    </div>
+                    <div class="custody-content">
+                      <div class="custody-header">
+                        <h4 class="custody-guardian">{entry.guardianName}</h4>
+                        <span class="custody-time">{formatDate(entry.timestamp)}</span>
+                      </div>
+                      <div class="custody-details">
+                        <p class="custody-location">
+                          <strong>Location:</strong> {entry.location?.address || 'Unknown'}
+                        </p>
+                        <p class="custody-status">
+                          <strong>Status:</strong> 
+                          <span class="status-badge {getStatusColor(entry.status)}">
+                            {entry.status}
+                          </span>
+                        </p>
+                        {#if entry.notes}
+                          <p class="custody-notes">
+                            <strong>Notes:</strong> {entry.notes}
+                          </p>
+                        {/if}
+                      </div>
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            </div>
+          {/if}
+        </div>
+      </div>
     {/if}
   </main>
-</div> 
+  
+  <Footer />
+</div>
+
+<style>
+  .tracking-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .tracking-header {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(30, 58, 138, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .tracking-code-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .tracking-code-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0;
+  }
+  
+  .status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .last-updated {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .map-section {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(30, 58, 138, 0.1);
+  }
+  
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .detail-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(30, 58, 138, 0.1);
+  }
+  
+  .detail-card.custody-chain {
+    grid-column: 1 / -1;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f3f4f6;
+  }
+  
+  .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .info-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+    min-width: 120px;
+  }
+  
+  .info-value {
+    font-size: 0.875rem;
+    color: #1f2937;
+    font-weight: 600;
+    text-align: right;
+    flex: 1;
+  }
+  
+  .status-delivered {
+    color: #059669;
+  }
+  
+  .status-in-transit {
+    color: #2563eb;
+  }
+  
+  .status-processing {
+    color: #d97706;
+  }
+  
+  .status-pending {
+    color: #6b7280;
+  }
+  
+  /* Custody Chain Styles */
+  .custody-timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  
+  .custody-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e5e7eb;
+  }
+  
+  .custody-entry {
+    position: relative;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .custody-marker {
+    position: absolute;
+    left: -2rem;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .marker-number {
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  
+  .custody-content {
+    flex: 1;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .custody-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .custody-guardian {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 0;
+  }
+  
+  .custody-time {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  
+  .custody-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .custody-location,
+  .custody-status,
+  .custody-notes {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  
+  .custody-notes {
+    font-style: italic;
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .tracking-header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.5rem;
+    }
+    
+    .tracking-code-section {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .tracking-code-title {
+      font-size: 1.25rem;
+    }
+    
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .detail-card {
+      padding: 1rem;
+    }
+    
+    .info-row {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .info-label {
+      min-width: auto;
+    }
+    
+    .info-value {
+      text-align: left;
+    }
+    
+    .custody-timeline {
+      padding-left: 1.5rem;
+    }
+    
+    .custody-marker {
+      left: -1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+    
+    .marker-number {
+      font-size: 0.75rem;
+    }
+    
+    .custody-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style> 
