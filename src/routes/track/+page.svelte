@@ -1,5 +1,6 @@
 <script>
   import TrackingForm from '$lib/components/TrackingForm.svelte';
+  import TrackingResults from '$lib/components/TrackingResults.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { trackingStore } from '$lib/stores/trackingStore';
   
@@ -49,6 +50,9 @@
         <p class="tracking-subtitle">Track your shipment with our secure, real-time monitoring system</p>
         
         <TrackingForm on:submit={handleTrackingSubmit} />
+        
+        <!-- Display tracking results -->
+        <TrackingResults />
         
         <div class="tracking-helper">
           <h3>📋 Tracking Code Format</h3>

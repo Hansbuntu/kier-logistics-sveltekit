@@ -69,7 +69,7 @@
           <span class="phone-icon">📞</span>
           <a href="tel:+1234567890" class="phone-link">+1 (234) 567-890</a>
         </div>
-        <a href="/contact" class="cta-button-mobile">
+        <a href="/contact" class="cta-button-mobile" on:click={closeMenu}>
           Get Quote
         </a>
       </div>
