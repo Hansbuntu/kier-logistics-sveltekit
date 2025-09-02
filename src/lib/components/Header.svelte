@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   
   let isMenuOpen = false;
   let isScrolled = false;
@@ -19,6 +20,11 @@
   
   function closeMenu() {
     isMenuOpen = false;
+  }
+  
+  function navigateTo(path) {
+    closeMenu();
+    goto(path);
   }
 </script>
 
@@ -60,18 +66,18 @@
   <!-- Mobile Navigation Menu -->
   <div class="mobile-menu {isMenuOpen ? 'open' : ''}">
     <nav class="nav-mobile">
-      <a href="/" class="nav-link-mobile" on:click={closeMenu}>Home</a>
-      <a href="/services" class="nav-link-mobile" on:click={closeMenu}>Services</a>
-      <a href="/track" class="nav-link-mobile" on:click={closeMenu}>Track Shipment</a>
-      <a href="/contact" class="nav-link-mobile" on:click={closeMenu}>Contact</a>
+      <button class="nav-link-mobile" on:click={() => navigateTo('/')}>Home</button>
+      <button class="nav-link-mobile" on:click={() => navigateTo('/services')}>Services</button>
+      <button class="nav-link-mobile" on:click={() => navigateTo('/track')}>Track Shipment</button>
+      <button class="nav-link-mobile" on:click={() => navigateTo('/contact')}>Contact</button>
       <div class="mobile-contact">
         <div class="phone-number-mobile">
           <span class="phone-icon">📞</span>
           <a href="tel:+1234567890" class="phone-link">+1 (234) 567-890</a>
         </div>
-        <a href="/contact" class="cta-button-mobile" on:click={closeMenu}>
+        <button class="cta-button-mobile" on:click={() => navigateTo('/contact')}>
           Get Quote
-        </a>
+        </button>
       </div>
     </nav>
   </div>
@@ -286,24 +292,25 @@
   
   /* Mobile Menu */
   .mobile-menu {
-    display: none;
-    background: rgba(30, 58, 138, 0.98);
-    backdrop-filter: blur(10px);
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
+    background: rgba(30, 58, 138, 0.98);
+    backdrop-filter: blur(10px);
     padding: 1rem;
-    transform: translateY(-100%);
-    opacity: 0;
-    transition: all 0.3s ease;
     z-index: 999;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .mobile-menu.open {
-    display: block;
-    transform: translateY(0);
+    max-height: 500px;
     opacity: 1;
+    transform: translateY(0);
   }
   
   .nav-mobile {
@@ -313,18 +320,26 @@
   }
   
   .nav-link-mobile {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    text-decoration: none;
     font-weight: 500;
     padding: 1rem;
     border-radius: 8px;
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: left;
   }
   
   .nav-link-mobile:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: #fbbf24;
+    transform: translateX(4px);
+  }
+  
+  .nav-link-mobile:active {
+    transform: translateX(2px);
   }
   
   .mobile-contact {
@@ -354,13 +369,18 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    text-decoration: none;
-    display: inline-block;
+    display: block;
     text-align: center;
   }
   
   .cta-button-mobile:hover {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+  }
+  
+  .cta-button-mobile:active {
+    transform: translateY(0);
   }
   
   /* Responsive Design */
@@ -372,15 +392,6 @@
     
     .mobile-menu-btn {
       display: flex;
-    }
-    
-    .mobile-menu {
-      display: block;
-    }
-    
-    .mobile-menu.open {
-      transform: translateY(0);
-      opacity: 1;
     }
     
     .header-container {
