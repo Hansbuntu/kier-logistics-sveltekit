@@ -371,11 +371,12 @@
             </div>
           {/if}
         </div>
+      </div>
     {/if}
   </main>
   
   <Footer />
-</div>
+</div> 
 
 <style>
   .tracking-details {

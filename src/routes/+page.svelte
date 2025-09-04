@@ -70,13 +70,6 @@
       </div>
             </div>
     
-    <div class="hero-visual">
-      <div class="hero-image">
-        <div class="gold-bars">GOLD</div>
-        <div class="security-shield">SEC</div>
-        <div class="global-network">GLO</div>
-        </div>
-    </div>
   </div>
 </section>
 
@@ -240,50 +233,6 @@
     font-size: 0.875rem;
   }
   
-  /* Hero Visual */
-  .hero-visual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  
-  .hero-image {
-    position: relative;
-    width: 300px;
-    height: 300px;
-  }
-  
-  .gold-bars,
-  .security-shield,
-  .global-network {
-    position: absolute;
-    font-size: 4rem;
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  .gold-bars {
-    top: 20%;
-    left: 20%;
-    animation-delay: 0s;
-  }
-  
-  .security-shield {
-    top: 50%;
-    right: 20%;
-    animation-delay: 2s;
-  }
-  
-  .global-network {
-    bottom: 20%;
-    left: 50%;
-    animation-delay: 4s;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
   
   /* Why Choose Us Section */
   .why-choose-us {
@@ -442,9 +391,6 @@
       gap: 1.5rem;
     }
     
-    .hero-visual {
-      order: -1;
-    }
   }
   
   @media (max-width: 768px) {
@@ -509,16 +455,6 @@
       font-size: 1.75rem;
     }
     
-    .hero-image {
-      width: 250px;
-      height: 250px;
-    }
-    
-    .gold-bars,
-    .security-shield,
-    .global-network {
-      font-size: 3rem;
-    }
   }
   
   /* Notification Styles */
