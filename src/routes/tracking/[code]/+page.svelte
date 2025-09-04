@@ -1,7 +1,7 @@
 <script>
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import TrackingMap from '$lib/components/TrackingMap.svelte';
+  import InteractiveMap from '$lib/components/InteractiveMap.svelte';
   import { trackingStore } from '$lib/stores/trackingStore';
   import Footer from '$lib/components/Footer.svelte';
 
@@ -69,8 +69,8 @@
         <h2>Tracking Error</h2>
         <p>{error}</p>
         <a href="/track" class="retry-link">
-          Try Another Code
-        </a>
+              Try Another Code
+            </a>
       </div>
     {/if}
 
@@ -92,7 +92,7 @@
         
         <!-- Map Section -->
         <div class="map-section">
-          <TrackingMap {trackingData} height="500px" />
+          <InteractiveMap {trackingData} height="500px" />
         </div>
         
         <!-- Details Grid -->
@@ -252,11 +252,11 @@
                 <div class="info-row">
                   <span class="info-label">Contact:</span>
                   <span class="info-value">{trackingData.destination.recipientContact || 'Recipient Contact'}</span>
-                </div>
-              </div>
-            </div>
-          {/if}
-          
+          </div>
+        </div>
+      </div>
+    {/if}
+
           <!-- Delivery Information -->
           <div class="detail-card">
             <h3 class="card-title">Delivery Information</h3>
@@ -331,7 +331,7 @@
   </main>
   
   <Footer />
-</div>
+</div> 
 
 <style>
   .page-container {

@@ -67,10 +67,10 @@
             {notification.message}
           </div>
         {/if}
-      </div>
+              </div>
             </div>
     
-  </div>
+          </div>
 </section>
 
 <!-- Trust Indicators -->

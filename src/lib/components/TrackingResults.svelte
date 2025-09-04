@@ -19,7 +19,7 @@
       minute: '2-digit'
     });
   }
-  
+
   function getStatusColor(status) {
     switch (status?.toLowerCase()) {
       case 'delivered': return 'text-green-600 bg-green-100';
@@ -106,14 +106,14 @@
                 </div>
                 <div class="activity-status {getStatusColor(entry.status)}">
                   {entry.status}
-                </div>
-              </div>
-            {/each}
-          </div>
-        </div>
-      {/if}
     </div>
-    
+        </div>
+            {/each}
+      </div>
+        </div>
+        {/if}
+      </div>
+
     <div class="results-actions">
       <button class="btn-secondary" on:click={viewFullDetails}>
         View Full Details

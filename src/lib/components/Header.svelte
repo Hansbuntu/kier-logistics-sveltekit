@@ -44,7 +44,6 @@
                   <a href="/services" class="nav-link">Services</a>
                   <a href="/track" class="nav-link">Track Shipment</a>
                   <a href="/contact" class="nav-link">Contact</a>
-                  <a href="/admin" class="nav-link">Admin</a>
                 </nav>
     
     <!-- Right Side - Contact & CTA -->
@@ -71,7 +70,6 @@
                   <button class="nav-link-mobile" on:click={() => navigateTo('/services')}>Services</button>
                   <button class="nav-link-mobile" on:click={() => navigateTo('/track')}>Track Shipment</button>
                   <button class="nav-link-mobile" on:click={() => navigateTo('/contact')}>Contact</button>
-                  <button class="nav-link-mobile" on:click={() => navigateTo('/admin')}>Admin</button>
       <div class="mobile-contact">
         <div class="phone-number-mobile">
           <span class="phone-icon">PHONE</span>

@@ -3,6 +3,7 @@
   import { generateSecureTrackingCode, generateMultipleCodes, validateTrackingCode } from '$lib/utils/codeGenerator.js';
   import { supabase, supabaseHelpers } from '$lib/supabase.js';
   import ImageUpload from '$lib/components/ImageUpload.svelte';
+  import LocationSearch from '$lib/components/LocationSearch.svelte';
   
   let shipments = [];
   let loading = true;
@@ -2284,35 +2285,14 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-            <div>
-              <label for="edit-origin-address" class="block text-sm font-medium text-gray-700 mb-1">Origin Address</label>
-              <input
-                type="text"
-                id="edit-origin-address"
-                bind:value={editForm.origin_location.address}
-                placeholder="Enter address to auto-find coordinates"
-                class="input-field"
-                on:blur={() => findCoordinates('origin')}
-              />
-            </div>
-            <div>
-              <label for="edit-origin-city" class="block text-sm font-medium text-gray-700 mb-1">Origin City</label>
-              <input
-                type="text"
-                id="edit-origin-city"
-                bind:value={editForm.origin_location.city}
-                class="input-field"
-                placeholder="e.g., London"
-              />
-            </div>
-            <div>
-              <label for="edit-origin-country" class="block text-sm font-medium text-gray-700 mb-1">Origin Country</label>
-              <input
-                type="text"
-                id="edit-origin-country"
-                bind:value={editForm.origin_location.country}
-                class="input-field"
-                placeholder="e.g., United Kingdom"
+            <div class="md:col-span-3">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Origin Location</label>
+              <LocationSearch 
+                bind:value={editForm.origin_location}
+                onLocationSelect={(location) => {
+                  editForm.origin_location = location;
+                }}
+                placeholder="Search for origin location..."
               />
             </div>
           </div>
@@ -2363,35 +2343,14 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-            <div>
-              <label for="edit-current-address" class="block text-sm font-medium text-gray-700 mb-1">Current Address</label>
-              <input
-                type="text"
-                id="edit-current-address"
-                bind:value={editForm.current_location.address}
-                placeholder="Enter address to auto-find coordinates"
-                class="input-field"
-                on:blur={() => findCoordinates('current')}
-              />
-            </div>
-            <div>
-              <label for="edit-current-city" class="block text-sm font-medium text-gray-700 mb-1">Current City</label>
-              <input
-                type="text"
-                id="edit-current-city"
-                bind:value={editForm.current_location.city}
-                class="input-field"
-                placeholder="e.g., Frankfurt"
-              />
-            </div>
-            <div>
-              <label for="edit-current-country" class="block text-sm font-medium text-gray-700 mb-1">Current Country</label>
-              <input
-                type="text"
-                id="edit-current-country"
-                bind:value={editForm.current_location.country}
-                class="input-field"
-                placeholder="e.g., Germany"
+            <div class="md:col-span-3">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Current Location</label>
+              <LocationSearch 
+                bind:value={editForm.current_location}
+                onLocationSelect={(location) => {
+                  editForm.current_location = location;
+                }}
+                placeholder="Search for current location..."
               />
             </div>
           </div>
@@ -2453,35 +2412,14 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-            <div>
-              <label for="edit-dest-address" class="block text-sm font-medium text-gray-700 mb-1">Destination Address</label>
-              <input
-                type="text"
-                id="edit-dest-address"
-                bind:value={editForm.destination_location.address}
-                placeholder="Enter address to auto-find coordinates"
-                class="input-field"
-                on:blur={() => findCoordinates('destination')}
-              />
-            </div>
-            <div>
-              <label for="edit-dest-city" class="block text-sm font-medium text-gray-700 mb-1">Destination City</label>
-              <input
-                type="text"
-                id="edit-dest-city"
-                bind:value={editForm.destination_location.city}
-                class="input-field"
-                placeholder="e.g., Zurich"
-              />
-            </div>
-            <div>
-              <label for="edit-dest-country" class="block text-sm font-medium text-gray-700 mb-1">Destination Country</label>
-              <input
-                type="text"
-                id="edit-dest-country"
-                bind:value={editForm.destination_location.country}
-                class="input-field"
-                placeholder="e.g., Switzerland"
+            <div class="md:col-span-3">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Destination Location</label>
+              <LocationSearch 
+                bind:value={editForm.destination_location}
+                onLocationSelect={(location) => {
+                  editForm.destination_location = location;
+                }}
+                placeholder="Search for destination location..."
               />
             </div>
           </div>

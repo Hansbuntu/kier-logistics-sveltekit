@@ -9,7 +9,7 @@
     trackingData = data;
   });
   
-  
+
   function formatDate(dateString) {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -20,7 +20,7 @@
       minute: '2-digit'
     });
   }
-  
+
   function getStatusColor(status) {
     switch (status?.toLowerCase()) {
       case 'delivered': return 'text-green-600 bg-green-100';
@@ -157,10 +157,10 @@
         <div class="detail-item">
           <span class="detail-label">Last Updated:</span>
           <span class="detail-value">{formatDate(trackingData.lastUpdated)}</span>
+          </div>
         </div>
       </div>
-    </div>
-    
+      
     <!-- Next Update Information -->
     <div class="next-update">
       <div class="update-info">
@@ -168,7 +168,7 @@
         <p class="update-text">{getNextUpdateTime()}</p>
       </div>
     </div>
-    
+
     <!-- Delivery Information -->
     {#if trackingData.delivery?.estimatedDelivery}
       <div class="delivery-info">
@@ -185,14 +185,14 @@
           {#if trackingData.destination?.recipientName}
             <div class="recipient-info">
               <strong>Recipient:</strong> {trackingData.destination.recipientName}
-            </div>
-          {/if}
+        </div>
+        {/if}
           {#if trackingData.destination?.location?.address}
             <div class="delivery-address">
               <strong>Delivery Address:</strong> {trackingData.destination.location.address}
             </div>
-          {/if}
-        </div>
+        {/if}
+      </div>
       </div>
     {/if}
     
@@ -218,9 +218,9 @@
               </div>
             </div>
           {/each}
+          </div>
         </div>
-      </div>
-    {/if}
+        {/if}
     
     <!-- Special Handling Notes -->
     {#if getSpecialHandlingNotes().length > 0}
@@ -230,9 +230,9 @@
           {#each getSpecialHandlingNotes() as note}
             <div class="handling-note">{note}</div>
           {/each}
+          </div>
         </div>
-      </div>
-    {/if}
+        {/if}
     
     <!-- Customer Service -->
     <div class="customer-service">
@@ -243,24 +243,24 @@
           <div class="service-details">
             <div class="service-name">Call Customer Service</div>
             <div class="service-info">+1 (234) 567-890</div>
-          </div>
-        </div>
+      </div>
+    </div>
         <div class="service-item">
           <span class="service-icon">💬</span>
           <div class="service-details">
             <div class="service-name">Live Chat</div>
             <div class="service-info">Available 24/7</div>
-          </div>
-        </div>
+  </div>
+    </div>
         <div class="service-item">
           <span class="service-icon">📧</span>
           <div class="service-details">
             <div class="service-name">Email Support</div>
             <div class="service-info">support@kierlogics.com</div>
-          </div>
         </div>
       </div>
     </div>
+  </div>
     
     <!-- Action Buttons -->
     <div class="action-buttons">
@@ -271,7 +271,7 @@
         Share Tracking Link
       </button>
     </div>
-  </div>
+</div>
 {/if}
 
 <style>

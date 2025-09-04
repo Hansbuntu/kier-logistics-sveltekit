@@ -1,13 +1,13 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  
+
   export let trackingData = null;
   export let height = '400px';
-  
+
   let mapContainer;
   let map = null;
   let markers = [];
-  
+
   onMount(async () => {
     if (!trackingData) return;
     
@@ -17,7 +17,7 @@
       
       // Initialize map
       map = L.map(mapContainer).setView([40.7128, -74.0060], 4);
-      
+
       // Add tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -43,8 +43,8 @@
     // Clear existing markers
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
-    
-    // Add current location marker
+
+      // Add current location marker
     if (trackingData.currentLocation) {
       const currentMarker = L.marker([trackingData.currentLocation.latitude, trackingData.currentLocation.longitude], {
         icon: L.divIcon({
@@ -54,7 +54,7 @@
           iconAnchor: [20, 40]
         })
       }).addTo(map);
-      
+
       currentMarker.bindPopup(`
         <div class="popup-content">
           <h4>Current Location</h4>
@@ -64,11 +64,11 @@
           <p><strong>Status:</strong> ${trackingData.delivery?.currentStatus || 'Unknown'}</p>
         </div>
       `);
-      
+
       markers.push(currentMarker);
     }
-    
-    // Add custody chain markers
+
+      // Add custody chain markers
     if (trackingData.custodyChain && trackingData.custodyChain.length > 0) {
       trackingData.custodyChain.forEach((entry, index) => {
         if (entry.location) {
@@ -78,9 +78,9 @@
               html: `<div class="marker-content"><div class="marker-icon">${index + 1}</div><div class="marker-label">Checkpoint</div></div>`,
               iconSize: [35, 35],
               iconAnchor: [17, 35]
-            })
-          }).addTo(map);
-          
+          })
+        }).addTo(map);
+
           const date = new Date(entry.timestamp).toLocaleDateString();
           custodyMarker.bindPopup(`
             <div class="popup-content">
@@ -90,44 +90,44 @@
               <p><strong>Status:</strong> ${entry.status}</p>
               <p><strong>Location:</strong> ${entry.location.address}</p>
               ${entry.notes ? `<p><strong>Notes:</strong> ${entry.notes}</p>` : ''}
-            </div>
-          `);
-          
+          </div>
+        `);
+
           markers.push(custodyMarker);
         }
       });
     }
-    
-    // Add destination marker if available
+
+      // Add destination marker if available
     if (trackingData.delivery?.nextLocation) {
       const destMarker = L.marker([trackingData.delivery.nextLocation.latitude, trackingData.delivery.nextLocation.longitude], {
         icon: L.divIcon({
-          className: 'custom-marker destination',
+            className: 'custom-marker destination',
           html: '<div class="marker-content"><div class="marker-icon">🎯</div><div class="marker-label">Destination</div></div>',
           iconSize: [40, 40],
           iconAnchor: [20, 40]
-        })
-      }).addTo(map);
-      
-      destMarker.bindPopup(`
+          })
+        }).addTo(map);
+
+        destMarker.bindPopup(`
         <div class="popup-content">
           <h4>Next Destination</h4>
           <p><strong>Address:</strong> ${trackingData.delivery.nextLocation.address}</p>
           <p><strong>City:</strong> ${trackingData.delivery.nextLocation.city}</p>
           <p><strong>Facility:</strong> ${trackingData.delivery.nextLocation.facility}</p>
           ${trackingData.delivery.estimatedDelivery ? `<p><strong>ETA:</strong> ${new Date(trackingData.delivery.estimatedDelivery).toLocaleDateString()}</p>` : ''}
-        </div>
-      `);
-      
-      markers.push(destMarker);
-    }
-    
-    // Fit map to show all markers
+          </div>
+        `);
+
+        markers.push(destMarker);
+      }
+
+      // Fit map to show all markers
     if (markers.length > 0) {
       const group = new L.featureGroup(markers);
-      map.fitBounds(group.getBounds().pad(0.1));
+        map.fitBounds(group.getBounds().pad(0.1));
+      }
     }
-  }
   
   function formatDate(dateString) {
     if (!dateString) return 'N/A';
@@ -403,4 +403,4 @@
       grid-template-columns: 1fr;
     }
   }
-</style>
+</style> 
