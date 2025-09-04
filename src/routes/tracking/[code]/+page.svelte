@@ -210,7 +210,6 @@
                 {/each}
               </div>
             </div>
-          </div>
           
           <!-- Origin Information -->
           {#if trackingData.origin}
