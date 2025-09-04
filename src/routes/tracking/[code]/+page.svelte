@@ -371,7 +371,6 @@
             </div>
           {/if}
         </div>
-      </div>
     {/if}
   </main>
   
