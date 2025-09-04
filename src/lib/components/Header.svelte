@@ -49,7 +49,7 @@
     <!-- Right Side - Contact & CTA -->
     <div class="header-right">
       <div class="phone-number">
-        <span class="phone-icon">📞</span>
+        <span class="phone-icon">PHONE</span>
         <a href="tel:+1234567890" class="phone-link">+1 (234) 567-890</a>
       </div>
       <a href="/contact" class="cta-button">
@@ -72,7 +72,7 @@
       <button class="nav-link-mobile" on:click={() => navigateTo('/contact')}>Contact</button>
       <div class="mobile-contact">
         <div class="phone-number-mobile">
-          <span class="phone-icon">📞</span>
+          <span class="phone-icon">PHONE</span>
           <a href="tel:+1234567890" class="phone-link">+1 (234) 567-890</a>
         </div>
         <button class="cta-button-mobile" on:click={() => navigateTo('/contact')}>

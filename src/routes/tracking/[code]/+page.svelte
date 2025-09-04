@@ -186,6 +186,32 @@
             </div>
           </div>
           
+          <!-- Product Images -->
+          {#if trackingData.product?.photos && trackingData.product.photos.length > 0}
+            <div class="detail-card product-images-card">
+              <h3 class="card-title">Product Images</h3>
+              <div class="images-grid">
+                {#each trackingData.product.photos as photo, index}
+                  <div class="image-item">
+                    <img 
+                      src={photo} 
+                      alt="Product image {index + 1}" 
+                      class="product-image"
+                      loading="lazy"
+                      on:error={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div class="image-error" style="display: none;">
+                      <span class="error-text">Image unavailable</span>
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            </div>
+          </div>
+          
           <!-- Origin Information -->
           {#if trackingData.origin}
             <div class="detail-card">
@@ -571,6 +597,53 @@
   
   .custody-notes {
     font-style: italic;
+  }
+  
+  /* Product Images Styles */
+  .product-images-card {
+    grid-column: 1 / -1;
+  }
+  
+  .images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .image-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .product-image:hover {
+    transform: scale(1.05);
+  }
+  
+  .image-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+  
+  .error-text {
+    font-size: 0.875rem;
+    font-weight: 500;
   }
   
   /* Mobile Responsive */

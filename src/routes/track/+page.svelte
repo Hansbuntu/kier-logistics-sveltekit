@@ -55,7 +55,7 @@
         <EnhancedTrackingResults />
         
         <div class="tracking-helper">
-          <h3>📋 Tracking Code Format</h3>
+          <h3>Tracking Code Format</h3>
           <p><strong>Format:</strong> XXX-XXXX-XXXX (e.g., KLG-2024-001A)</p>
           <p class="helper-note">Your tracking code should be 12 characters long with hyphens separating each section</p>
         </div>
@@ -63,7 +63,7 @@
       
       {#if recentCodes.length > 0}
         <div class="recent-codes">
-          <h3>🔍 Recent Tracking Codes</h3>
+          <h3>Recent Tracking Codes</h3>
           <div class="codes-list">
             {#each recentCodes as code}
               <button class="recent-code-btn" on:click={() => window.location.href = `/?code=${code}`}>
@@ -147,25 +147,25 @@
     
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">📍</div>
+        <div class="feature-icon">GPS</div>
         <h3>Real-Time GPS Tracking</h3>
         <p>Live location updates with precise coordinates and estimated arrival times</p>
       </div>
       
       <div class="feature-card">
-        <div class="feature-icon">🔒</div>
+        <div class="feature-icon">SEC</div>
         <h3>Chain of Custody</h3>
         <p>Complete documentation of every handoff and transfer throughout the journey</p>
       </div>
       
       <div class="feature-card">
-        <div class="feature-icon">📱</div>
+        <div class="feature-icon">MOB</div>
         <h3>Mobile Notifications</h3>
         <p>Instant alerts for status changes, delays, and delivery confirmations</p>
       </div>
       
       <div class="feature-card">
-        <div class="feature-icon">📊</div>
+        <div class="feature-icon">RPT</div>
         <h3>Detailed Reports</h3>
         <p>Comprehensive tracking reports with timestamps and location history</p>
       </div>
@@ -183,7 +183,7 @@
         
         <div class="support-options">
           <div class="support-option">
-            <span class="support-icon">📞</span>
+            <span class="support-icon">PHONE</span>
             <div>
               <strong>24/7 Support:</strong> +1 (555) 999-GOLD
             </div>

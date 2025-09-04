@@ -9,15 +9,6 @@
     trackingData = data;
   });
   
-  // Define shipment stages
-  const shipmentStages = [
-    { id: 'package-received', name: 'Package Received', icon: '📦' },
-    { id: 'security-verification', name: 'Security Verification', icon: '🔒' },
-    { id: 'in-transit', name: 'In Transit', icon: '🚚' },
-    { id: 'customs', name: 'Customs', icon: '🏛️' },
-    { id: 'out-for-delivery', name: 'Out for Delivery', icon: '🚛' },
-    { id: 'delivered', name: 'Delivered', icon: '✅' }
-  ];
   
   function formatDate(dateString) {
     if (!dateString) return 'N/A';
@@ -43,11 +34,6 @@
     }
   }
   
-  function getCurrentStageIndex() {
-    if (!trackingData) return 0;
-    const currentStatus = trackingData.journeyStatus || trackingData.delivery?.currentStatus || 'pending';
-    return shipmentStages.findIndex(stage => stage.id === currentStatus) || 0;
-  }
   
   function getNextUpdateTime() {
     if (!trackingData) return null;
@@ -116,16 +102,16 @@
     const notes = [];
     
     if (trackingData.securityLevel === 'maximum') {
-      notes.push('🔒 Maximum security protocol - Armed escort required');
+      notes.push('Maximum security protocol - Armed escort required');
     }
     if (trackingData.product?.type?.toLowerCase().includes('gold')) {
-      notes.push('🥇 High-value precious metals - Special handling required');
+      notes.push('High-value precious metals - Special handling required');
     }
     if (trackingData.verificationStatus === 'verified') {
-      notes.push('✅ Security verification completed');
+      notes.push('Security verification completed');
     }
     if (trackingData.product?.weight > 1) {
-      notes.push('⚖️ Heavy package - Special transport arrangements');
+      notes.push('Heavy package - Special transport arrangements');
     }
     
     return notes;
@@ -152,32 +138,6 @@
       </div>
     </div>
     
-    <!-- Progress Timeline -->
-    <div class="progress-section">
-      <h4 class="section-title">Shipment Progress</h4>
-      <div class="progress-timeline">
-        {#each shipmentStages as stage, index}
-          {@const isCompleted = index <= getCurrentStageIndex()}
-          {@const isCurrent = index === getCurrentStageIndex()}
-          <div class="timeline-step {isCompleted ? 'completed' : ''} {isCurrent ? 'current' : ''}">
-            <div class="step-marker">
-              <div class="step-icon">{stage.icon}</div>
-            </div>
-            <div class="step-content">
-              <div class="step-name">{stage.name}</div>
-              {#if isCurrent}
-                <div class="step-status">Current Status</div>
-              {:else if isCompleted}
-                <div class="step-status">Completed</div>
-              {/if}
-            </div>
-            {#if index < shipmentStages.length - 1}
-              <div class="step-connector {isCompleted ? 'completed' : ''}"></div>
-            {/if}
-          </div>
-        {/each}
-      </div>
-    </div>
     
     <!-- Current Status Details -->
     <div class="status-details">
@@ -232,6 +192,32 @@
               <strong>Delivery Address:</strong> {trackingData.destination.location.address}
             </div>
           {/if}
+        </div>
+      </div>
+    {/if}
+    
+    <!-- Product Images -->
+    {#if trackingData.product?.photos && trackingData.product.photos.length > 0}
+      <div class="product-images">
+        <h4 class="images-title">Product Images</h4>
+        <div class="images-grid">
+          {#each trackingData.product.photos as photo, index}
+            <div class="image-item">
+              <img 
+                src={photo} 
+                alt="Product image {index + 1}" 
+                class="product-image"
+                loading="lazy"
+                on:error={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              <div class="image-error" style="display: none;">
+                <span class="error-text">Image unavailable</span>
+              </div>
+            </div>
+          {/each}
         </div>
       </div>
     {/if}
@@ -360,78 +346,6 @@
     margin: 0 0 1rem 0;
   }
   
-  .progress-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    position: relative;
-  }
-  
-  .timeline-step {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    position: relative;
-  }
-  
-  .step-marker {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f3f4f6;
-    border: 3px solid #e5e7eb;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-  }
-  
-  .step-icon {
-    font-size: 1.25rem;
-  }
-  
-  .timeline-step.completed .step-marker {
-    background: #10b981;
-    border-color: #059669;
-    color: white;
-  }
-  
-  .timeline-step.current .step-marker {
-    background: #3b82f6;
-    border-color: #2563eb;
-    color: white;
-    animation: pulse 2s infinite;
-  }
-  
-  .step-content {
-    flex: 1;
-  }
-  
-  .step-name {
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.25rem;
-  }
-  
-  .step-status {
-    font-size: 0.875rem;
-    color: #6b7280;
-  }
-  
-  .step-connector {
-    position: absolute;
-    left: 1.5rem;
-    top: 3rem;
-    width: 2px;
-    height: 1rem;
-    background: #e5e7eb;
-    transition: all 0.3s ease;
-  }
-  
-  .step-connector.completed {
-    background: #10b981;
-  }
   
   .status-details {
     background: #f8fafc;
@@ -554,6 +468,62 @@
     padding: 0.5rem;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 6px;
+  }
+  
+  .product-images {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .images-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 0 0 1rem 0;
+  }
+  
+  .images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .image-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .product-image:hover {
+    transform: scale(1.05);
+  }
+  
+  .image-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+  
+  .error-text {
+    font-size: 0.875rem;
+    font-weight: 500;
   }
   
   .customer-service {

@@ -40,7 +40,11 @@ export const GET = async ({ params }) => {
             purity: 999.9,
             purityUnit: '999.9',
             serialNumber: 'GB-2024-001',
-            photos: [],
+            photos: [
+              'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop&crop=center',
+              'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&crop=center',
+              'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=400&h=300&fit=crop&crop=center'
+            ],
             description: 'Test gold shipment for demonstration - High-value precious metals requiring special handling'
           },
           origin: {

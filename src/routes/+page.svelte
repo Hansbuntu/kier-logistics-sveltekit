@@ -14,12 +14,12 @@
   // Subscribe to tracking store
   trackingStore.subscribe((data) => {
     trackingData = data;
-    console.log('📊 Tracking data updated:', data);
+    console.log('Tracking data updated:', data);
   });
 
   async function handleTrackingSubmit(event) {
     const trackingCode = event.detail;
-    console.log('🔍 Tracking submitted:', trackingCode);
+    console.log('Tracking submitted:', trackingCode);
     
     // The TrackingForm component now handles the API call
     // We just need to handle the result display
@@ -72,9 +72,9 @@
     
     <div class="hero-visual">
       <div class="hero-image">
-        <div class="gold-bars">🥇</div>
-        <div class="security-shield">🛡️</div>
-        <div class="global-network">🌍</div>
+        <div class="gold-bars">GOLD</div>
+        <div class="security-shield">SEC</div>
+        <div class="global-network">GLO</div>
         </div>
     </div>
   </div>
@@ -98,7 +98,7 @@
 
     <div class="features-grid">
       <div class="feature-item">
-        <div class="feature-icon">🔒</div>
+        <div class="feature-icon">SEC</div>
         <h3>Maximum Security</h3>
         <p>Multi-layered security protocols with armed escorts and 24/7 surveillance</p>
     </div>
@@ -110,13 +110,13 @@
       </div>
       
       <div class="feature-item">
-        <div class="feature-icon">🌍</div>
+        <div class="feature-icon">GLO</div>
         <h3>Global Reach</h3>
         <p>Worldwide logistics network with local expertise and regulatory compliance</p>
       </div>
       
       <div class="feature-item">
-        <div class="feature-icon">💎</div>
+        <div class="feature-icon">PRM</div>
         <h3>Specialized Handling</h3>
         <p>Expert care for precious metals with temperature control and chain of custody</p>
         </div>
