@@ -39,12 +39,13 @@
     </div>
     
     <!-- Desktop Navigation -->
-    <nav class="nav-desktop">
-      <a href="/" class="nav-link">Home</a>
-      <a href="/services" class="nav-link">Services</a>
-      <a href="/track" class="nav-link">Track Shipment</a>
-      <a href="/contact" class="nav-link">Contact</a>
-    </nav>
+                    <nav class="nav-desktop">
+                  <a href="/" class="nav-link">Home</a>
+                  <a href="/services" class="nav-link">Services</a>
+                  <a href="/track" class="nav-link">Track Shipment</a>
+                  <a href="/contact" class="nav-link">Contact</a>
+                  <a href="/admin" class="nav-link">Admin</a>
+                </nav>
     
     <!-- Right Side - Contact & CTA -->
     <div class="header-right">
@@ -65,11 +66,12 @@
   
   <!-- Mobile Navigation Menu -->
   <div class="mobile-menu {isMenuOpen ? 'open' : ''}">
-    <nav class="nav-mobile">
-      <button class="nav-link-mobile" on:click={() => navigateTo('/')}>Home</button>
-      <button class="nav-link-mobile" on:click={() => navigateTo('/services')}>Services</button>
-      <button class="nav-link-mobile" on:click={() => navigateTo('/track')}>Track Shipment</button>
-      <button class="nav-link-mobile" on:click={() => navigateTo('/contact')}>Contact</button>
+                    <nav class="nav-mobile">
+                  <button class="nav-link-mobile" on:click={() => navigateTo('/')}>Home</button>
+                  <button class="nav-link-mobile" on:click={() => navigateTo('/services')}>Services</button>
+                  <button class="nav-link-mobile" on:click={() => navigateTo('/track')}>Track Shipment</button>
+                  <button class="nav-link-mobile" on:click={() => navigateTo('/contact')}>Contact</button>
+                  <button class="nav-link-mobile" on:click={() => navigateTo('/admin')}>Admin</button>
       <div class="mobile-contact">
         <div class="phone-number-mobile">
           <span class="phone-icon">PHONE</span>

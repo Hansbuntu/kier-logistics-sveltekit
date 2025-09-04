@@ -15,6 +15,7 @@
   let showEditModal = false;
   let editingShipment = null;
   let showCreateForm = false;
+  let connectionStatus = 'Unknown';
   let editForm = {
     // Origin Information
     origin_location: {
@@ -800,6 +801,43 @@
     }
   }
 
+  async function testConnection() {
+    try {
+      console.log('🔍 Testing Supabase connection...');
+      console.log('🔍 Supabase client:', supabase);
+      console.log('🔍 Supabase URL:', supabase.supabaseUrl);
+      
+      // Test enhanced_shipments table
+      const { data: enhancedData, error: enhancedError } = await supabase
+        .from('enhanced_shipments')
+        .select('count')
+        .limit(1);
+      
+      // Test regular shipments table
+      const { data: regularData, error: regularError } = await supabase
+        .from('shipments')
+        .select('count')
+        .limit(1);
+      
+      console.log('🔍 Enhanced shipments table:', { enhancedData, enhancedError });
+      console.log('🔍 Regular shipments table:', { regularData, regularError });
+      
+      if (enhancedError && regularError) {
+        console.error('❌ Both tables failed:', { enhancedError, regularError });
+        connectionStatus = `Failed: ${enhancedError.message}`;
+      } else if (enhancedError) {
+        console.log('⚠️ Enhanced table failed, but regular table works:', regularError);
+        connectionStatus = 'Connected (regular table only)';
+      } else {
+        console.log('✅ Connection test successful');
+        connectionStatus = 'Connected successfully!';
+      }
+    } catch (err) {
+      console.error('❌ Connection test error:', err);
+      connectionStatus = `Error: ${err.message}`;
+    }
+  }
+
   async function saveShipment() {
     try {
       loading = true;
@@ -807,6 +845,24 @@
 
       // Store the tracking code before clearing editingShipment
       const trackingCode = editingShipment.tracking_code;
+
+      // Debug Supabase connection
+      console.log('🔍 Supabase client:', supabase);
+      console.log('🔍 Supabase URL:', supabase.supabaseUrl);
+      console.log('🔍 Is mock client?', supabase.from.toString().includes('mock'));
+      
+      // Test database connection
+      const { data: testData, error: testError } = await supabase
+        .from('enhanced_shipments')
+        .select('count')
+        .limit(1);
+      
+      console.log('🔍 Database connection test:', { testData, testError });
+      
+      if (testError) {
+        console.error('❌ Database connection failed:', testError);
+        throw new Error(`Database connection failed: ${testError.message}`);
+      }
 
       // Debug logging for photos
       console.log('📸 DEBUG: editForm.product_details:', editForm.product_details);
@@ -2027,6 +2083,22 @@
         <div>
           <h2 class="text-xl font-semibold text-gray-900">Shipment Management</h2>
           <p class="text-sm text-gray-600">Edit shipment details and tracking information</p>
+        </div>
+      </div>
+
+      <!-- Database Connection Test -->
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg border">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-medium text-gray-900">Database Connection</h3>
+            <p class="text-sm text-gray-600">Status: <span class="font-mono text-xs">{connectionStatus}</span></p>
+          </div>
+          <button 
+            on:click={testConnection}
+            class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+          >
+            Test Connection
+          </button>
         </div>
       </div>
 

@@ -9,6 +9,17 @@ console.log('VITE_SUPABASE_URL:', supabaseUrl ? '✅ Loaded' : '❌ Missing')
 console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '✅ Loaded' : '❌ Missing')
 console.log('NODE_ENV:', import.meta.env.NODE_ENV)
 console.log('DEV:', import.meta.env.DEV)
+console.log('MODE:', import.meta.env.MODE)
+console.log('BASE_URL:', import.meta.env.BASE_URL)
+
+// Check if we're in Vercel
+if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+  console.log('🌐 Running on Vercel')
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('❌ CRITICAL: Supabase environment variables missing on Vercel!')
+    console.error('Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to Vercel environment variables')
+  }
+}
 
 // Create mock client for development when environment variables are missing
 const createMockClient = () => ({
@@ -48,12 +59,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Export the appropriate client based on environment
-export const supabase = (!supabaseUrl || !supabaseAnonKey) && import.meta.env.DEV 
+export const supabase = (!supabaseUrl || !supabaseAnonKey) 
   ? createMockClient() 
   : createClient(supabaseUrl, supabaseAnonKey)
 
 // Export the appropriate helpers based on environment
-export const supabaseHelpers = (!supabaseUrl || !supabaseAnonKey) && import.meta.env.DEV
+export const supabaseHelpers = (!supabaseUrl || !supabaseAnonKey)
   ? createMockHelpers()
   : {
       // Generate a secure tracking code
