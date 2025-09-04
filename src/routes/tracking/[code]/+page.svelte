@@ -53,74 +53,24 @@
   }
 </script>
 
-<svelte:head>
-  <title>Tracking {trackingCode} - Kier Logistics</title>
-  <meta name="description" content="Track your shipment with real-time location updates and custody chain verification." />
-</svelte:head>
-
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-gold-50 to-gray-100">
-  <!-- Header -->
-  <header class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center py-6">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-            </svg>
-          </div>
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900">Tracking Details</h1>
-            <p class="text-sm text-gray-600">Code: {trackingCode}</p>
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <a href="/tracking-history" class="btn-secondary">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-            </svg>
-            History
-          </a>
-          <a href="/" class="btn-secondary">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            New Track
-          </a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="page-container">
+  <main class="main-content">
     <!-- Loading State -->
     {#if loading}
-      <div class="flex justify-center items-center py-12">
-        <div class="text-center">
-          <div class="loading-spinner mx-auto mb-4"></div>
-          <p class="text-gray-600">Retrieving tracking information...</p>
-        </div>
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading tracking information...</p>
       </div>
     {/if}
 
     <!-- Error State -->
     {#if error}
-      <div class="max-w-2xl mx-auto">
-        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
-          <div class="flex items-center">
-            <svg class="w-5 h-5 text-red-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <h3 class="text-sm font-medium text-red-800">Error</h3>
-          </div>
-          <p class="mt-2 text-sm text-red-700">{error}</p>
-          <div class="mt-4">
-            <a href="/" class="btn-primary">
-              Try Another Code
-            </a>
-          </div>
-        </div>
+      <div class="error-container">
+        <h2>Tracking Error</h2>
+        <p>{error}</p>
+        <a href="/track" class="retry-link">
+          Try Another Code
+        </a>
       </div>
     {/if}
 
@@ -153,15 +103,15 @@
             <div class="info-list">
               <div class="info-row">
                 <span class="info-label">Type:</span>
-                <span class="info-value">{trackingData.product?.type || 'Gold Shipment'}</span>
+                <span class="info-value">{trackingData.product?.type || 'Precious Metals'}</span>
               </div>
               <div class="info-row">
                 <span class="info-label">Weight:</span>
-                <span class="info-value">{trackingData.product?.weight || 0} {trackingData.product?.weightUnit || 'kg'}</span>
+                <span class="info-value">{trackingData.product?.weight || 'N/A'} {trackingData.product?.weightUnit || 'kg'}</span>
               </div>
               <div class="info-row">
                 <span class="info-label">Purity:</span>
-                <span class="info-value">{trackingData.product?.purity || 999.5} {trackingData.product?.purityUnit || '999.5'}</span>
+                <span class="info-value">{trackingData.product?.purity || 'N/A'} {trackingData.product?.purityUnit || ''}</span>
               </div>
               <div class="info-row">
                 <span class="info-label">Serial Number:</span>
@@ -210,6 +160,7 @@
                 {/each}
               </div>
             </div>
+          {/if}
           
           <!-- Origin Information -->
           {#if trackingData.origin}
@@ -264,7 +215,11 @@
               </div>
               <div class="info-row">
                 <span class="info-label">Facility:</span>
-                <span class="info-value">{trackingData.currentLocation?.facility || 'Kier Logistics Hub'}</span>
+                <span class="info-value">{trackingData.currentFacility || 'Kier Logistics Hub'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Guardian:</span>
+                <span class="info-value">{trackingData.currentGuardian || 'Current Guardian'}</span>
               </div>
             </div>
           </div>
@@ -376,9 +331,72 @@
   </main>
   
   <Footer />
-</div> 
+</div>
 
 <style>
+  .page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .error-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    margin: 2rem 0;
+  }
+  
+  .error-container h2 {
+    color: #dc2626;
+    margin-bottom: 1rem;
+  }
+  
+  .retry-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+  
   .tracking-details {
     display: flex;
     flex-direction: column;
@@ -389,8 +407,7 @@
     background: white;
     border-radius: 16px;
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(30, 58, 138, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -400,66 +417,60 @@
   
   .tracking-code-section {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   
   .tracking-code-title {
-    font-size: 1.5rem;
+    font-size: 1.875rem;
     font-weight: 700;
     color: #1e3a8a;
     margin: 0;
   }
   
   .status-badge {
+    display: inline-block;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: 9999px;
     font-size: 0.875rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.05em;
   }
   
   .last-updated {
     color: #6b7280;
     font-size: 0.875rem;
-    font-weight: 500;
   }
   
   .map-section {
     background: white;
     border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(30, 58, 138, 0.1);
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
   
   .details-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 1.5rem;
   }
   
   .detail-card {
     background: white;
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(30, 58, 138, 0.1);
-  }
-  
-  .detail-card.custody-chain {
-    grid-column: 1 / -1;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
   }
   
   .card-title {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #1e3a8a;
     margin: 0 0 1rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #f3f4f6;
+    border-bottom: 2px solid #e5e7eb;
   }
   
   .info-list {
@@ -476,127 +487,22 @@
   }
   
   .info-label {
-    font-size: 0.875rem;
-    color: #6b7280;
     font-weight: 500;
+    color: #374151;
     min-width: 120px;
   }
   
   .info-value {
-    font-size: 0.875rem;
     color: #1f2937;
-    font-weight: 600;
     text-align: right;
     flex: 1;
   }
   
-  .status-delivered {
-    color: #059669;
-  }
-  
-  .status-in-transit {
-    color: #2563eb;
-  }
-  
-  .status-processing {
-    color: #d97706;
-  }
-  
-  .status-pending {
-    color: #6b7280;
-  }
-  
-  /* Custody Chain Styles */
-  .custody-timeline {
-    position: relative;
-    padding-left: 2rem;
-  }
-  
-  .custody-timeline::before {
-    content: '';
-    position: absolute;
-    left: 1rem;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #e5e7eb;
-  }
-  
-  .custody-entry {
-    position: relative;
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .custody-marker {
-    position: absolute;
-    left: -2rem;
-    top: 0;
-    width: 2rem;
-    height: 2rem;
-    background: #3b82f6;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .marker-number {
-    color: white;
-    font-weight: 600;
-    font-size: 0.875rem;
-  }
-  
-  .custody-content {
-    flex: 1;
-    background: #f8fafc;
-    padding: 1rem;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .custody-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .custody-guardian {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1e3a8a;
-    margin: 0;
-  }
-  
-  .custody-time {
-    font-size: 0.75rem;
-    color: #6b7280;
-    font-weight: 500;
-  }
-  
-  .custody-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  
-  .custody-location,
-  .custody-status,
-  .custody-notes {
-    margin: 0;
-    font-size: 0.875rem;
-    color: #4b5563;
-  }
-  
-  .custody-notes {
-    font-style: italic;
-  }
+  .status-high { color: #059669; }
+  .status-medium { color: #d97706; }
+  .status-low { color: #dc2626; }
+  .status-verified { color: #059669; }
+  .status-pending { color: #6b7280; }
   
   /* Product Images Styles */
   .product-images-card {
@@ -645,31 +551,116 @@
     font-weight: 500;
   }
   
+  /* Custody Chain Styles */
+  .custody-chain {
+    grid-column: 1 / -1;
+  }
+  
+  .custody-timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  
+  .custody-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e5e7eb;
+  }
+  
+  .custody-entry {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  
+  .custody-marker {
+    position: absolute;
+    left: -2rem;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .marker-number {
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  
+  .custody-content {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .custody-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .custody-guardian {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 0;
+  }
+  
+  .custody-time {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .custody-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .custody-location,
+  .custody-status {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  
+  .custody-notes {
+    font-style: italic;
+  }
+  
   /* Mobile Responsive */
   @media (max-width: 768px) {
+    .main-content {
+      padding: 1rem;
+    }
+    
     .tracking-header {
       flex-direction: column;
       align-items: flex-start;
       padding: 1.5rem;
     }
     
-    .tracking-code-section {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    
     .tracking-code-title {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
     
     .details-grid {
       grid-template-columns: 1fr;
       gap: 1rem;
-    }
-    
-    .detail-card {
-      padding: 1rem;
     }
     
     .info-row {
@@ -704,4 +695,4 @@
       align-items: flex-start;
     }
   }
-</style> 
+</style>
