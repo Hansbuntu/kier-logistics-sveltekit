@@ -1,262 +1,696 @@
 <script>
-  import TrackingMap from './TrackingMap.svelte';
-  import CustodyChain from './CustodyChain.svelte';
-  import ProductDetails from './ProductDetails.svelte';
-
-  export let trackingData;
-
-  function getStatusColor(status) {
-    switch (status) {
-      case 'pickup':
-        return 'status-pickup';
-      case 'in-transit':
-        return 'status-in-transit';
-      case 'customs':
-        return 'status-customs';
-      case 'delayed':
-        return 'status-delayed';
-      case 'delivered':
-        return 'status-delivered';
-      case 'returned':
-        return 'status-returned';
-      default:
-        return 'status-pending';
-    }
-  }
-
-  function getStatusIcon(status) {
-    switch (status) {
-      case 'pickup':
-        return 'M13 10V3L4 14h7v7l9-11h-7z';
-      case 'in-transit':
-        return 'M13 10V3L4 14h7v7l9-11h-7z';
-      case 'customs':
-        return 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z';
-      case 'delayed':
-        return 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z';
-      case 'delivered':
-        return 'M5 13l4 4L19 7';
-      case 'returned':
-        return 'M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6';
-      default:
-        return 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z';
-    }
-  }
-
+  import { trackingStore } from '$lib/stores/trackingStore';
+  import { goto } from '$app/navigation';
+  
+  let trackingData = null;
+  
+  // Subscribe to tracking store
+  trackingStore.subscribe((data) => {
+    trackingData = data;
+  });
+  
+  // Define shipment stages
+  const shipmentStages = [
+    { id: 'package-received', name: 'Package Received', icon: '📦' },
+    { id: 'security-verification', name: 'Security Verification', icon: '🔒' },
+    { id: 'in-transit', name: 'In Transit', icon: '🚚' },
+    { id: 'customs', name: 'Customs', icon: '🏛️' },
+    { id: 'out-for-delivery', name: 'Out for Delivery', icon: '🚛' },
+    { id: 'delivered', name: 'Delivered', icon: '✅' }
+  ];
+  
   function formatDate(dateString) {
-    if (!dateString) return 'TBD';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     });
   }
-
-  function getProgressPercentage() {
-    const statuses = ['pending', 'pickup', 'in-transit', 'customs', 'delivered'];
-    const currentIndex = statuses.indexOf(trackingData.journey_status);
-    return Math.round(((currentIndex + 1) / statuses.length) * 100);
+  
+  function getStatusColor(status) {
+    switch (status?.toLowerCase()) {
+      case 'delivered': return 'text-green-600 bg-green-100';
+      case 'in-transit': return 'text-blue-600 bg-blue-100';
+      case 'security-verification': return 'text-yellow-600 bg-yellow-100';
+      case 'package-received': return 'text-purple-600 bg-purple-100';
+      case 'customs': return 'text-orange-600 bg-orange-100';
+      case 'out-for-delivery': return 'text-indigo-600 bg-indigo-100';
+      case 'pending': return 'text-gray-600 bg-gray-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  }
+  
+  function getCurrentStageIndex() {
+    if (!trackingData) return 0;
+    const currentStatus = trackingData.journeyStatus || trackingData.delivery?.currentStatus || 'pending';
+    return shipmentStages.findIndex(stage => stage.id === currentStatus) || 0;
+  }
+  
+  function getNextUpdateTime() {
+    if (!trackingData) return null;
+    const currentStatus = trackingData.journeyStatus || trackingData.delivery?.currentStatus || 'pending';
+    
+    switch (currentStatus) {
+      case 'package-received':
+        return 'Next update expected within 2-4 hours during security verification';
+      case 'security-verification':
+        return 'Next update expected within 4-6 hours when transit begins';
+      case 'in-transit':
+        return 'Next update expected every 6-8 hours during transit';
+      case 'customs':
+        return 'Next update expected within 12-24 hours after customs clearance';
+      case 'out-for-delivery':
+        return 'Next update expected within 1-2 hours upon delivery';
+      default:
+        return 'Regular updates every 6-8 hours';
+    }
+  }
+  
+  function getConfidenceLevel() {
+    if (!trackingData) return 'Low';
+    const currentStatus = trackingData.journeyStatus || trackingData.delivery?.currentStatus || 'pending';
+    
+    switch (currentStatus) {
+      case 'delivered':
+        return '100%';
+      case 'out-for-delivery':
+        return '95%';
+      case 'in-transit':
+        return '85%';
+      case 'customs':
+        return '70%';
+      case 'security-verification':
+        return '60%';
+      default:
+        return '50%';
+    }
+  }
+  
+  function shareTracking() {
+    if (!trackingData) return;
+    const shareUrl = `${window.location.origin}/tracking/${trackingData.trackingCode}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Track Your Shipment - Kier Logistics',
+        text: `Track your shipment ${trackingData.trackingCode} with Kier Logistics`,
+        url: shareUrl
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      alert('Tracking link copied to clipboard!');
+    }
+  }
+  
+  function viewFullDetails() {
+    if (trackingData?.trackingCode) {
+      goto(`/tracking/${trackingData.trackingCode}`);
+    }
+  }
+  
+  function getSpecialHandlingNotes() {
+    if (!trackingData) return [];
+    const notes = [];
+    
+    if (trackingData.securityLevel === 'maximum') {
+      notes.push('🔒 Maximum security protocol - Armed escort required');
+    }
+    if (trackingData.product?.type?.toLowerCase().includes('gold')) {
+      notes.push('🥇 High-value precious metals - Special handling required');
+    }
+    if (trackingData.verificationStatus === 'verified') {
+      notes.push('✅ Security verification completed');
+    }
+    if (trackingData.product?.weight > 1) {
+      notes.push('⚖️ Heavy package - Special transport arrangements');
+    }
+    
+    return notes;
   }
 </script>
 
-<div class="space-y-6">
-  <!-- Journey Overview Header -->
-  <div class="card">
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center space-x-3">
-        <div class="w-12 h-12 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg flex items-center justify-center">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={getStatusIcon(trackingData.journey_status)}></path>
-          </svg>
+{#if trackingData}
+  <div class="enhanced-tracking-results">
+    <!-- Header with Tracking Code and Status -->
+    <div class="tracking-header">
+      <div class="header-left">
+        <h3 class="tracking-code">Tracking: {trackingData.trackingCode}</h3>
+        <div class="status-badge {getStatusColor(trackingData.journeyStatus || trackingData.delivery?.currentStatus)}">
+          {trackingData.journeyStatus || trackingData.delivery?.currentStatus || 'Processing'}
         </div>
-        <div>
-          <h2 class="text-xl font-bold text-gray-900">
-            Tracking Code: {trackingData.trackingCode}
-          </h2>
-          <div class="flex items-center space-x-2 mt-1">
-            <span class="status-badge {getStatusColor(trackingData.journey_status)}">
-              {trackingData.journey_status.replace('-', ' ').toUpperCase()}
-            </span>
-            <span class="text-sm text-gray-600">• Security Level: {trackingData.security_level}</span>
+      </div>
+      <div class="header-right">
+        <button class="share-btn" on:click={shareTracking}>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+          </svg>
+          Share
+        </button>
+      </div>
+    </div>
+    
+    <!-- Progress Timeline -->
+    <div class="progress-section">
+      <h4 class="section-title">Shipment Progress</h4>
+      <div class="progress-timeline">
+        {#each shipmentStages as stage, index}
+          {@const isCompleted = index <= getCurrentStageIndex()}
+          {@const isCurrent = index === getCurrentStageIndex()}
+          <div class="timeline-step {isCompleted ? 'completed' : ''} {isCurrent ? 'current' : ''}">
+            <div class="step-marker">
+              <div class="step-icon">{stage.icon}</div>
+            </div>
+            <div class="step-content">
+              <div class="step-name">{stage.name}</div>
+              {#if isCurrent}
+                <div class="step-status">Current Status</div>
+              {:else if isCompleted}
+                <div class="step-status">Completed</div>
+              {/if}
+            </div>
+            {#if index < shipmentStages.length - 1}
+              <div class="step-connector {isCompleted ? 'completed' : ''}"></div>
+            {/if}
+          </div>
+        {/each}
+      </div>
+    </div>
+    
+    <!-- Current Status Details -->
+    <div class="status-details">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">Current Location:</span>
+          <span class="detail-value">{trackingData.currentLocation?.address || 'Processing Center'}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Facility:</span>
+          <span class="detail-value">{trackingData.currentFacility || trackingData.currentLocation?.facility || 'Kier Logistics Hub'}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Guardian:</span>
+          <span class="detail-value">{trackingData.currentGuardian || 'Security Team'}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Last Updated:</span>
+          <span class="detail-value">{formatDate(trackingData.lastUpdated)}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Next Update Information -->
+    <div class="next-update">
+      <div class="update-info">
+        <h4 class="update-title">Next Update Expected</h4>
+        <p class="update-text">{getNextUpdateTime()}</p>
+      </div>
+    </div>
+    
+    <!-- Delivery Information -->
+    {#if trackingData.delivery?.estimatedDelivery}
+      <div class="delivery-info">
+        <div class="delivery-header">
+          <h4 class="delivery-title">Estimated Delivery</h4>
+          <div class="confidence-badge">
+            {getConfidenceLevel()} Confidence
+          </div>
+        </div>
+        <div class="delivery-details">
+          <div class="delivery-date">
+            {formatDate(trackingData.delivery.estimatedDelivery)}
+          </div>
+          {#if trackingData.destination?.recipientName}
+            <div class="recipient-info">
+              <strong>Recipient:</strong> {trackingData.destination.recipientName}
+            </div>
+          {/if}
+          {#if trackingData.destination?.location?.address}
+            <div class="delivery-address">
+              <strong>Delivery Address:</strong> {trackingData.destination.location.address}
+            </div>
+          {/if}
+        </div>
+      </div>
+    {/if}
+    
+    <!-- Special Handling Notes -->
+    {#if getSpecialHandlingNotes().length > 0}
+      <div class="special-handling">
+        <h4 class="handling-title">Special Handling Notes</h4>
+        <div class="handling-notes">
+          {#each getSpecialHandlingNotes() as note}
+            <div class="handling-note">{note}</div>
+          {/each}
+        </div>
+      </div>
+    {/if}
+    
+    <!-- Customer Service -->
+    <div class="customer-service">
+      <h4 class="service-title">Need Help?</h4>
+      <div class="service-options">
+        <div class="service-item">
+          <span class="service-icon">📞</span>
+          <div class="service-details">
+            <div class="service-name">Call Customer Service</div>
+            <div class="service-info">+1 (234) 567-890</div>
+          </div>
+        </div>
+        <div class="service-item">
+          <span class="service-icon">💬</span>
+          <div class="service-details">
+            <div class="service-name">Live Chat</div>
+            <div class="service-info">Available 24/7</div>
+          </div>
+        </div>
+        <div class="service-item">
+          <span class="service-icon">📧</span>
+          <div class="service-details">
+            <div class="service-name">Email Support</div>
+            <div class="service-info">support@kierlogics.com</div>
           </div>
         </div>
       </div>
-      
-      <!-- Refresh Button -->
-      <button
-        on:click={() => window.dispatchEvent(new CustomEvent('refreshTracking', { detail: trackingData.trackingCode }))}
-        class="btn-secondary text-sm"
-        title="Refresh tracking data"
-      >
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-        </svg>
-        Refresh
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-primary" on:click={viewFullDetails}>
+        View Full Details & Map
+      </button>
+      <button class="btn-secondary" on:click={shareTracking}>
+        Share Tracking Link
       </button>
     </div>
-
-    <!-- Journey Progress Bar -->
-    <div class="mb-6">
-      <div class="flex justify-between text-sm text-gray-600 mb-2">
-        <span>Journey Progress</span>
-        <span>{getProgressPercentage()}% Complete</span>
-      </div>
-      <div class="w-full bg-gray-200 rounded-full h-2">
-        <div class="bg-gradient-to-r from-gold-400 to-gold-600 h-2 rounded-full transition-all duration-500" 
-             style="width: {getProgressPercentage()}%"></div>
-      </div>
-      <div class="flex justify-between text-xs text-gray-500 mt-1">
-        <span>Pickup</span>
-        <span>In Transit</span>
-        <span>Customs</span>
-        <span>Delivered</span>
-      </div>
-    </div>
-
-    <!-- Journey Route Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Origin -->
-      <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border-l-4 border-blue-400">
-        <div class="flex items-center space-x-2 mb-3">
-          <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-          </div>
-          <span class="font-semibold text-blue-900">Origin</span>
-        </div>
-        <h3 class="font-medium text-blue-900 mb-1">{trackingData.origin_facility || 'Origin Facility'}</h3>
-        <p class="text-blue-700 text-sm mb-2">
-          {trackingData.origin_location?.address || 'Address TBD'}
-        </p>
-        <p class="text-blue-600 text-xs">
-          {trackingData.origin_location?.city || 'City'}, {trackingData.origin_location?.country || 'Country'}
-        </p>
-        {#if trackingData.pickup_date}
-          <p class="text-blue-500 text-xs mt-2">
-            📅 Picked up: {formatDate(trackingData.pickup_date)}
-          </p>
-        {/if}
-        {#if trackingData.origin_guardian}
-          <p class="text-blue-600 text-xs mt-1">
-            👤 Guardian: {trackingData.origin_guardian}
-          </p>
-        {/if}
-      </div>
-
-      <!-- Current Location -->
-      <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border-l-4 border-green-400">
-        <div class="flex items-center space-x-2 mb-3">
-          <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-          </div>
-          <span class="font-semibold text-green-900">Current</span>
-        </div>
-        <h3 class="font-medium text-green-900 mb-1">{trackingData.current_facility || 'Current Location'}</h3>
-        <p class="text-green-700 text-sm mb-2">
-          {trackingData.current_location?.address || 'Address TBD'}
-        </p>
-        <p class="text-green-600 text-xs">
-          {trackingData.current_location?.city || 'City'}, {trackingData.current_location?.country || 'Country'}
-        </p>
-        {#if trackingData.current_guardian}
-          <p class="text-green-600 text-xs mt-1">
-            👤 Guardian: {trackingData.current_guardian}
-          </p>
-        {/if}
-        <p class="text-green-500 text-xs mt-2">
-          🕒 Last updated: {formatDate(trackingData.last_updated)}
-        </p>
-      </div>
-
-      <!-- Destination -->
-      <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border-l-4 border-purple-400">
-        <div class="flex items-center space-x-2 mb-3">
-          <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-          </div>
-          <span class="font-semibold text-purple-900">Destination</span>
-        </div>
-        <h3 class="font-medium text-purple-900 mb-1">{trackingData.destination_facility || 'Destination Facility'}</h3>
-        <p class="text-purple-700 text-sm mb-2">
-          {trackingData.destination_location?.address || 'Address TBD'}
-        </p>
-        <p class="text-purple-600 text-xs">
-          {trackingData.destination_location?.city || 'City'}, {trackingData.destination_location?.country || 'Country'}
-        </p>
-        {#if trackingData.recipient_name}
-          <p class="text-purple-600 text-xs mt-1">
-            📦 Recipient: {trackingData.recipient_name}
-          </p>
-        {/if}
-        {#if trackingData.estimated_delivery}
-          <p class="text-purple-500 text-xs mt-2">
-            🎯 ETA: {formatDate(trackingData.estimated_delivery)}
-          </p>
-        {/if}
-      </div>
-    </div>
   </div>
-
-  <!-- Product Details -->
-  <ProductDetails {trackingData} />
-
-  <!-- Enhanced Map and Journey Details -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="card">
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Journey Route Map</h3>
-      <TrackingMap {trackingData} />
-    </div>
-
-    <div class="card">
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Security & Verification</h3>
-      <div class="space-y-4">
-        <!-- Security Level -->
-        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-          <span class="text-sm font-medium text-gray-700">Security Level</span>
-          <span class="px-3 py-1 text-xs font-medium rounded-full 
-            {trackingData.security_level === 'maximum' ? 'bg-red-100 text-red-800' : 
-              trackingData.security_level === 'high' ? 'bg-orange-100 text-orange-800' : 
-              'bg-green-100 text-green-800'}">
-            {trackingData.security_level?.toUpperCase() || 'STANDARD'}
-          </span>
-        </div>
-
-        <!-- Verification Status -->
-        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-          <span class="text-sm font-medium text-gray-700">Verification Status</span>
-          <span class="px-3 py-1 text-xs font-medium rounded-full 
-            {trackingData.verification_status === 'verified' ? 'bg-green-100 text-green-800' : 
-              trackingData.verification_status === 'failed' ? 'bg-red-100 text-red-800' : 
-              'bg-yellow-100 text-yellow-800'}">
-            {trackingData.verification_status?.toUpperCase() || 'PENDING'}
-          </span>
-        </div>
-
-        <!-- Custody Chain -->
-        <div class="border-t border-gray-200 pt-4">
-          <h4 class="text-md font-medium text-gray-900 mb-3">Custody Chain</h4>
-          <CustodyChain {trackingData} />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{/if}
 
 <style>
-  .status-pickup { @apply bg-blue-100 text-blue-800; }
-  .status-in-transit { @apply bg-green-100 text-green-800; }
-  .status-customs { @apply bg-yellow-100 text-yellow-800; }
-  .status-delayed { @apply bg-red-100 text-red-800; }
-  .status-delivered { @apply bg-purple-100 text-purple-800; }
-  .status-returned { @apply bg-gray-100 text-gray-800; }
-  .status-pending { @apply bg-gray-100 text-gray-800; }
+  .enhanced-tracking-results {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(30, 58, 138, 0.1);
+    margin-top: 2rem;
+  }
+  
+  .tracking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f3f4f6;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .tracking-code {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0;
+  }
+  
+  .status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .share-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f3f4f6;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    color: #4b5563;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .share-btn:hover {
+    background: #e5e7eb;
+    color: #1e3a8a;
+  }
+  
+  .progress-section {
+    margin-bottom: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 0 0 1rem 0;
+  }
+  
+  .progress-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+  }
+  
+  .timeline-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+  }
+  
+  .step-marker {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+    border: 3px solid #e5e7eb;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  .step-icon {
+    font-size: 1.25rem;
+  }
+  
+  .timeline-step.completed .step-marker {
+    background: #10b981;
+    border-color: #059669;
+    color: white;
+  }
+  
+  .timeline-step.current .step-marker {
+    background: #3b82f6;
+    border-color: #2563eb;
+    color: white;
+    animation: pulse 2s infinite;
+  }
+  
+  .step-content {
+    flex: 1;
+  }
+  
+  .step-name {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+  }
+  
+  .step-status {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .step-connector {
+    position: absolute;
+    left: 1.5rem;
+    top: 3rem;
+    width: 2px;
+    height: 1rem;
+    background: #e5e7eb;
+    transition: all 0.3s ease;
+  }
+  
+  .step-connector.completed {
+    background: #10b981;
+  }
+  
+  .status-details {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .detail-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  
+  .detail-value {
+    font-size: 0.875rem;
+    color: #1f2937;
+    font-weight: 600;
+  }
+  
+  .next-update {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .update-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .update-text {
+    color: #1e40af;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+  
+  .delivery-info {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .delivery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .delivery-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #065f46;
+    margin: 0;
+  }
+  
+  .confidence-badge {
+    background: #059669;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .delivery-date {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #065f46;
+    margin-bottom: 0.5rem;
+  }
+  
+  .recipient-info,
+  .delivery-address {
+    font-size: 0.875rem;
+    color: #047857;
+    margin-bottom: 0.25rem;
+  }
+  
+  .special-handling {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .handling-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #92400e;
+    margin: 0 0 1rem 0;
+  }
+  
+  .handling-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .handling-note {
+    font-size: 0.875rem;
+    color: #92400e;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+  }
+  
+  .customer-service {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .service-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 0 0 1rem 0;
+  }
+  
+  .service-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .service-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .service-icon {
+    font-size: 1.25rem;
+  }
+  
+  .service-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 0.875rem;
+  }
+  
+  .service-info {
+    color: #6b7280;
+    font-size: 0.75rem;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #1e3a8a;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+  }
+  
+  .btn-secondary {
+    background: #1e3a8a;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .btn-secondary:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .enhanced-tracking-results {
+      padding: 1.5rem;
+    }
+    
+    .tracking-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .header-left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .tracking-code {
+      font-size: 1.25rem;
+    }
+    
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .service-options {
+      grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+      min-width: auto;
+    }
+  }
 </style>

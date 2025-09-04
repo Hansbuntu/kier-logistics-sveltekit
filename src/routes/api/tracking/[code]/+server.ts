@@ -41,7 +41,20 @@ export const GET = async ({ params }) => {
             purityUnit: '999.9',
             serialNumber: 'GB-2024-001',
             photos: [],
-            description: 'Test gold shipment for demonstration'
+            description: 'Test gold shipment for demonstration - High-value precious metals requiring special handling'
+          },
+          origin: {
+            location: {
+              latitude: 51.5074,
+              longitude: -0.1278,
+              address: '1 Threadneedle Street',
+              city: 'London',
+              country: 'United Kingdom',
+              facility: 'London Bullion Market Association'
+            },
+            facility: 'LBMA Vault',
+            guardian: 'Sarah Johnson',
+            pickupDate: new Date(Date.now() - 259200000).toISOString() // 3 days ago
           },
           currentLocation: {
             latitude: 40.7128,
@@ -51,12 +64,47 @@ export const GET = async ({ params }) => {
             country: 'USA',
             facility: 'Kier Logistics NYC Hub'
           },
+          currentFacility: 'NYC Security Vault',
+          currentGuardian: 'Michael Chen',
+          destination: {
+            location: {
+              latitude: 34.0522,
+              longitude: -118.2437,
+              address: '456 Main Street',
+              city: 'Los Angeles',
+              country: 'USA',
+              facility: 'LA Precious Metals Exchange'
+            },
+            facility: 'LA Exchange Vault',
+            recipientName: 'Robert Williams',
+            recipientContact: '+1 (555) 123-4567'
+          },
+          journeyStatus: 'in-transit',
+          securityLevel: 'maximum',
+          verificationStatus: 'verified',
           custodyChain: [
             {
               id: 'custody-1',
               guardianId: 'guardian-1',
-              guardianName: 'John Smith',
-              timestamp: new Date(Date.now() - 86400000).toISOString(),
+              guardianName: 'Sarah Johnson',
+              timestamp: new Date(Date.now() - 259200000).toISOString(),
+              location: {
+                latitude: 51.5074,
+                longitude: -0.1278,
+                address: '1 Threadneedle Street',
+                city: 'London',
+                country: 'United Kingdom',
+                facility: 'LBMA Vault'
+              },
+              status: 'package-received',
+              notes: 'Package received and initial security verification completed',
+              verified: true
+            },
+            {
+              id: 'custody-2',
+              guardianId: 'guardian-2',
+              guardianName: 'David Brown',
+              timestamp: new Date(Date.now() - 172800000).toISOString(),
               location: {
                 latitude: 40.7128,
                 longitude: -74.0060,
@@ -65,8 +113,25 @@ export const GET = async ({ params }) => {
                 country: 'USA',
                 facility: 'Kier Logistics NYC Hub'
               },
+              status: 'security-verification',
+              notes: 'Security verification completed, package cleared for transit',
+              verified: true
+            },
+            {
+              id: 'custody-3',
+              guardianId: 'guardian-3',
+              guardianName: 'Michael Chen',
+              timestamp: new Date(Date.now() - 86400000).toISOString(),
+              location: {
+                latitude: 40.7128,
+                longitude: -74.0060,
+                address: '123 Wall Street',
+                city: 'New York',
+                country: 'USA',
+                facility: 'NYC Security Vault'
+              },
               status: 'in-transit',
-              notes: 'Package received and processed',
+              notes: 'Package in secure transit with armed escort',
               verified: true
             }
           ],
@@ -80,7 +145,7 @@ export const GET = async ({ params }) => {
               address: '456 Main Street',
               city: 'Los Angeles',
               country: 'USA',
-              facility: 'Kier Logistics LA Hub'
+              facility: 'LA Precious Metals Exchange'
             },
             etaHours: 48
           },
@@ -219,7 +284,7 @@ export const GET = async ({ params }) => {
     console.log('📸 Photos length:', finalShipment.product_details?.photos?.length);
     console.log('📸 Photos type:', typeof finalShipment.product_details?.photos);
 
-    // Format the response to match the expected structure
+    // Format the response to match the expected structure with all admin fields
     const response = {
       trackingCode: code,
       product: {
@@ -233,6 +298,21 @@ export const GET = async ({ params }) => {
         photos: finalShipment.product_details?.photos || [],
         description: finalShipment.product_details?.description || 'Shipment details pending'
       },
+      // Origin Information (from admin)
+      origin: {
+        location: {
+          latitude: finalShipment.origin_location?.latitude || 0,
+          longitude: finalShipment.origin_location?.longitude || 0,
+          address: finalShipment.origin_location?.address || 'Origin Location',
+          city: finalShipment.origin_location?.city || 'Origin City',
+          country: finalShipment.origin_location?.country || 'Origin Country',
+          facility: finalShipment.origin_location?.facility || 'Origin Facility'
+        },
+        facility: finalShipment.origin_facility || 'Origin Facility',
+        guardian: finalShipment.origin_guardian || 'Origin Guardian',
+        pickupDate: finalShipment.pickup_date || null
+      },
+      // Current Location
       currentLocation: {
         latitude: finalShipment.current_location?.latitude || 0,
         longitude: finalShipment.current_location?.longitude || 0,
@@ -241,6 +321,26 @@ export const GET = async ({ params }) => {
         country: finalShipment.current_location?.country || 'Processing',
         facility: finalShipment.current_location?.facility || 'Kier Logistics Hub'
       },
+      currentFacility: finalShipment.current_facility || 'Current Facility',
+      currentGuardian: finalShipment.current_guardian || 'Current Guardian',
+      // Destination Information (from admin)
+      destination: {
+        location: {
+          latitude: finalShipment.destination_location?.latitude || 0,
+          longitude: finalShipment.destination_location?.longitude || 0,
+          address: finalShipment.destination_location?.address || 'Destination Address',
+          city: finalShipment.destination_location?.city || 'Destination City',
+          country: finalShipment.destination_location?.country || 'Destination Country',
+          facility: finalShipment.destination_location?.facility || 'Destination Facility'
+        },
+        facility: finalShipment.destination_facility || 'Destination Facility',
+        recipientName: finalShipment.recipient_name || 'Recipient Name',
+        recipientContact: finalShipment.recipient_contact || 'Recipient Contact'
+      },
+      // Journey Status (from admin)
+      journeyStatus: finalShipment.journey_status || 'pending',
+      securityLevel: finalShipment.security_level || 'high',
+      verificationStatus: finalShipment.verification_status || 'pending',
       custodyChain: finalCustodyChain.map(entry => ({
         id: entry.id,
         guardianId: entry.guardian_id,
@@ -259,8 +359,8 @@ export const GET = async ({ params }) => {
         verified: entry.verified || false
       })),
       delivery: {
-        estimatedDelivery: finalShipment.delivery_info?.estimatedDelivery || null,
-        currentStatus: finalShipment.delivery_info?.currentStatus || finalShipment.status || 'pending',
+        estimatedDelivery: finalShipment.delivery_info?.estimatedDelivery || finalShipment.estimated_delivery || null,
+        currentStatus: finalShipment.delivery_info?.currentStatus || finalShipment.journey_status || 'pending',
         delayReason: finalShipment.delivery_info?.delayReason || null,
         nextLocation: finalShipment.delivery_info?.nextLocation || null,
         etaHours: finalShipment.delivery_info?.etaHours || 0

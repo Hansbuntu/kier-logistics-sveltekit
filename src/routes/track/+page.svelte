@@ -1,6 +1,6 @@
 <script>
   import TrackingForm from '$lib/components/TrackingForm.svelte';
-  import TrackingResults from '$lib/components/TrackingResults.svelte';
+  import EnhancedTrackingResults from '$lib/components/EnhancedTrackingResults.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { trackingStore } from '$lib/stores/trackingStore';
   
@@ -51,8 +51,8 @@
         
         <TrackingForm on:submit={handleTrackingSubmit} />
         
-        <!-- Display tracking results -->
-        <TrackingResults />
+        <!-- Display enhanced tracking results -->
+        <EnhancedTrackingResults />
         
         <div class="tracking-helper">
           <h3>📋 Tracking Code Format</h3>

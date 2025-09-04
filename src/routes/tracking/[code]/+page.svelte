@@ -171,8 +171,55 @@
                 <span class="info-label">Description:</span>
                 <span class="info-value">{trackingData.product?.description || 'Shipment details pending'}</span>
               </div>
+              <div class="info-row">
+                <span class="info-label">Security Level:</span>
+                <span class="info-value status-{trackingData.securityLevel || 'high'}">
+                  {trackingData.securityLevel || 'High'}
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Verification:</span>
+                <span class="info-value status-{trackingData.verificationStatus || 'pending'}">
+                  {trackingData.verificationStatus || 'Pending'}
+                </span>
+              </div>
             </div>
           </div>
+          
+          <!-- Origin Information -->
+          {#if trackingData.origin}
+            <div class="detail-card">
+              <h3 class="card-title">Origin Information</h3>
+              <div class="info-list">
+                <div class="info-row">
+                  <span class="info-label">Address:</span>
+                  <span class="info-value">{trackingData.origin.location?.address || 'Origin Location'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">City:</span>
+                  <span class="info-value">{trackingData.origin.location?.city || 'Origin City'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Country:</span>
+                  <span class="info-value">{trackingData.origin.location?.country || 'Origin Country'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Facility:</span>
+                  <span class="info-value">{trackingData.origin.facility || 'Origin Facility'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Guardian:</span>
+                  <span class="info-value">{trackingData.origin.guardian || 'Origin Guardian'}</span>
+                </div>
+                {#if trackingData.origin.pickupDate}
+                  <div class="info-row">
+                    <span class="info-label">Pickup Date:</span>
+                    <span class="info-value">{formatDate(trackingData.origin.pickupDate)}</span>
+                  </div>
+                {/if}
+              </div>
+            </div>
+          {/if}
           
           <!-- Current Location -->
           <div class="detail-card">
@@ -197,14 +244,47 @@
             </div>
           </div>
           
+          <!-- Destination Information -->
+          {#if trackingData.destination}
+            <div class="detail-card">
+              <h3 class="card-title">Destination Information</h3>
+              <div class="info-list">
+                <div class="info-row">
+                  <span class="info-label">Address:</span>
+                  <span class="info-value">{trackingData.destination.location?.address || 'Destination Address'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">City:</span>
+                  <span class="info-value">{trackingData.destination.location?.city || 'Destination City'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Country:</span>
+                  <span class="info-value">{trackingData.destination.location?.country || 'Destination Country'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Facility:</span>
+                  <span class="info-value">{trackingData.destination.facility || 'Destination Facility'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Recipient:</span>
+                  <span class="info-value">{trackingData.destination.recipientName || 'Recipient Name'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Contact:</span>
+                  <span class="info-value">{trackingData.destination.recipientContact || 'Recipient Contact'}</span>
+                </div>
+              </div>
+            </div>
+          {/if}
+          
           <!-- Delivery Information -->
           <div class="detail-card">
             <h3 class="card-title">Delivery Information</h3>
             <div class="info-list">
               <div class="info-row">
                 <span class="info-label">Status:</span>
-                <span class="info-value status-{trackingData.delivery?.currentStatus || 'pending'}">
-                  {trackingData.delivery?.currentStatus || 'Processing'}
+                <span class="info-value status-{trackingData.journeyStatus || trackingData.delivery?.currentStatus || 'pending'}">
+                  {trackingData.journeyStatus || trackingData.delivery?.currentStatus || 'Processing'}
                 </span>
               </div>
               {#if trackingData.delivery?.estimatedDelivery}
